@@ -2532,8 +2532,8 @@ The H2 console is enabled for local development. It allows the demonstrator to i
 ### 14.1.10 REST API documentation and testing
 
 <figure>
-  <img src="screenshots/report-swagger-main.png" alt="Swagger UI main application">
-  <figcaption>Figure 14.13 &mdash; Swagger UI for the main application: students, courses, enrollments, reports and diagnostics.</figcaption>
+  <img src="screenshots/report-swagger-students.png" alt="Swagger UI students and diagnostics">
+  <figcaption>Figure 14.13 &mdash; Swagger UI for the main application: reports, diagnostics and student operations.</figcaption>
 </figure>
 
 <figure>
