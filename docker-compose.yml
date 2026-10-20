@@ -1,0 +1,60 @@
+# ---------------------------------------------------------------------------
+# Run the complete system with one command:
+#   docker compose up --build
+#
+# Main application : http://localhost:8080
+# Grading service  : http://localhost:8081
+# Swagger UI       : http://localhost:8080/swagger-ui.html
+#                    http://localhost:8081/swagger-ui.html
+# ---------------------------------------------------------------------------
+services:
+  grading-service:
+    build:
+      context: .
+      args:
+        MODULE: grading-service
+    image: scholaris/grading-service:1.0.0
+    container_name: scholaris-grading
+    ports:
+      - "8081:8081"
+    environment:
+      SERVER_PORT: "8081"
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8081/api/grade/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 6
+      start_period: 25s
+    restart: unless-stopped
+
+  student-record-system:
+    build:
+      context: .
+      args:
+        MODULE: student-record-system
+    image: scholaris/student-record-system:1.0.0
+    container_name: scholaris-main
+    ports:
+      - "8080:8080"
+    environment:
+      SERVER_PORT: "8080"
+      # Service DNS name inside the Compose network (not localhost).
+      GRADING_SERVICE_BASE_URL: http://grading-service:8081
+      SPRING_DATASOURCE_URL: jdbc:h2:file:/app/data/studentdb;DB_CLOSE_ON_EXIT=FALSE
+      APP_SEED_ENABLED: "true"
+    volumes:
+      - student-data:/app/data
+    depends_on:
+      grading-service:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8080/actuator/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 8
+      start_period: 40s
+    restart: unless-stopped
+
+volumes:
+  student-data:
+    name: scholaris-student-data
