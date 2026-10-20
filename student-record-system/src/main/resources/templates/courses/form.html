@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Course form')}"></head>
+<body>
+<div class="app-shell">
+    <aside th:replace="~{fragments/layout :: sidebar('courses')}"></aside>
+    <div th:replace="~{fragments/layout :: sidebarScrim}"></div>
+
+    <div class="main">
+        <header th:replace="~{fragments/layout :: topbar('Course record', 'Create or update a course in the catalogue')}"></header>
+
+        <main class="content">
+            <div th:replace="~{fragments/layout :: flash}"></div>
+
+            <div class="breadcrumb">
+                <a th:href="@{/courses}">Courses</a>
+                <span class="breadcrumb-sep">/</span>
+                <span th:text="${isEdit ? 'Edit course' : 'New course'}">New course</span>
+            </div>
+
+            <div class="form-layout">
+                <form class="card form-card" th:action="${isEdit ? '/courses/' + courseId : '/courses'}"
+                      method="post" th:object="${courseForm}">
+                    <div class="form-section">
+                        <h2 class="form-section-title" th:text="${isEdit ? 'Edit course details' : 'Add a new course'}">
+                            Add a new course
+                        </h2>
+                        <p class="form-section-note">Fields marked with <span class="required">*</span> are required.</p>
+
+                        <div class="form-error-summary" th:if="${#fields.hasGlobalErrors()}">
+                            <strong>Please check the form:</strong>
+                            <ul>
+                                <li th:each="error : ${#fields.globalErrors()}" th:text="${error}">Error</li>
+                            </ul>
+                        </div>
+
+                        <div class="form-grid">
+                            <div class="form-field">
+                                <label for="code">Course code <span class="required">*</span></label>
+                                <input id="code" type="text" th:field="*{code}" th:errorclass="input-error"
+                                       placeholder="e.g. CS203" maxlength="15">
+                                <p class="field-hint">Stored in upper case; must be unique.</p>
+                                <p class="field-error" th:if="${#fields.hasErrors('code')}" th:errors="*{code}"></p>
+                            </div>
+
+                            <div class="form-field">
+                                <label for="title">Course title <span class="required">*</span></label>
+                                <input id="title" type="text" th:field="*{title}" th:errorclass="input-error"
+                                       placeholder="e.g. Operating Systems" maxlength="120">
+                                <p class="field-error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></p>
+                            </div>
+
+                            <div class="form-field">
+                                <label for="credits">Credits <span class="required">*</span></label>
+                                <input id="credits" type="number" th:field="*{credits}" th:errorclass="input-error"
+                                       min="1" max="10" step="1">
+                                <p class="field-error" th:if="${#fields.hasErrors('credits')}" th:errors="*{credits}"></p>
+                            </div>
+
+                            <div class="form-field">
+                                <label for="semester">Semester <span class="required">*</span></label>
+                                <select id="semester" th:field="*{semester}" th:errorclass="input-error">
+                                    <option th:each="number : ${#numbers.sequence(1, 8)}" th:value="${number}"
+                                            th:text="${'Semester ' + number}">Semester 1</option>
+                                </select>
+                                <p class="field-error" th:if="${#fields.hasErrors('semester')}" th:errors="*{semester}"></p>
+                            </div>
+
+                            <div class="form-field">
+                                <label for="department">Department</label>
+                                <input id="department" type="text" th:field="*{department}" th:errorclass="input-error"
+                                       list="departmentOptions" placeholder="Select or type a department" maxlength="80">
+                                <datalist id="departmentOptions">
+                                    <option th:each="department : ${departments}" th:value="${department}"></option>
+                                </datalist>
+                                <p class="field-error" th:if="${#fields.hasErrors('department')}" th:errors="*{department}"></p>
+                            </div>
+
+                            <div class="form-field">
+                                <label for="instructorId">Instructor</label>
+                                <select id="instructorId" th:field="*{instructorId}">
+                                    <option value="">Unassigned</option>
+                                    <option th:each="instructor : ${instructors}" th:value="${instructor.id}"
+                                            th:text="${instructor.fullName + ' (' + instructor.employeeCode + ')'}">
+                                        Anitha Raman (EMP1001)
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="form-field full">
+                                <label for="description">Description</label>
+                                <textarea id="description" th:field="*{description}" th:errorclass="input-error"
+                                          maxlength="500" placeholder="A short description of the course outcomes and topics."></textarea>
+                                <p class="field-error" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <a class="btn btn-ghost" th:href="@{/courses}">Cancel</a>
+                        <button class="btn btn-primary" type="submit"
+                                th:text="${isEdit ? 'Save changes' : 'Create course'}">Create course</button>
+                    </div>
+                </form>
+
+                <aside class="stack">
+                    <div class="card aside-card">
+                        <h3>Course catalogue</h3>
+                        <p>
+                            Course codes must be unique and appear on every transcript. Credits are used as
+                            weights when the GPA is calculated.
+                        </p>
+                        <ul class="mini-list">
+                            <li><span>Credits</span><strong>1 – 10</strong></li>
+                            <li><span>Semester</span><strong>1 – 8</strong></li>
+                            <li><span>Instructor</span><strong>Optional</strong></li>
+                        </ul>
+                    </div>
+
+                    <div class="card aside-card">
+                        <h3>JPA relationship</h3>
+                        <p>
+                            A course has many enrollments. Each enrollment connects one student to one course and
+                            stores marks, grade and grade points.
+                        </p>
+                        <div class="info-grid">
+                            <div class="info-box"><span>Mapping</span><strong>@OneToMany</strong></div>
+                            <div class="info-box"><span>Join entity</span><strong>Enrollment</strong></div>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </main>
+
+        <footer th:replace="~{fragments/layout :: footer}"></footer>
+    </div>
+</div>
+</body>
+</html>

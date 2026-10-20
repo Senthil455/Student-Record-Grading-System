@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Dashboard')}"></head>
+<body>
+<div class="app-shell">
+    <aside th:replace="~{fragments/layout :: sidebar('dashboard')}"></aside>
+    <div th:replace="~{fragments/layout :: sidebarScrim}"></div>
+
+    <div class="main">
+        <header th:replace="~{fragments/layout :: topbar('Dashboard', 'A live view of students, courses and academic performance')}"></header>
+
+        <main class="content">
+            <div th:replace="~{fragments/layout :: flash}"></div>
+
+            <div class="stack">
+                <section class="hero">
+                    <div>
+                        <p class="eyebrow">Academic overview · <span th:text="${academicYear}">2026–2027</span></p>
+                        <h1>Good records make good decisions.</h1>
+                        <p>
+                            Scholaris brings student records, course enrollment, grading and reporting into one
+                            calm workspace. Record a result, follow a cohort, or audit performance in a few clicks.
+                        </p>
+                        <div class="hero-actions">
+                            <a class="btn btn-gold" th:href="@{/enrollments/new}">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+                                Record a grade
+                            </a>
+                            <a class="btn btn-outline-light" th:href="@{/students/new}">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"></circle><path d="M3.5 19c0-3 2.5-5 5.5-5s5.5 2 5.5 5M19 8v6M16 11h6"></path></svg>
+                                Add a student
+                            </a>
+                        </div>
+                    </div>
+                    <div class="hero-seal" aria-hidden="true"><span>S</span></div>
+                </section>
+
+                <section class="kpi-grid" aria-label="Key numbers">
+                    <article class="kpi">
+                        <div class="kpi-top">
+                            <span>Students</span>
+                            <span class="kpi-icon">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.2"></circle><path d="M3.5 19.5c0-3.1 2.5-5.2 5.5-5.2s5.5 2.1 5.5 5.2M16 5.2a3 3 0 0 1 0 5.8M17.5 14.5c2 .5 3.3 2.1 3.3 4.4"></path></svg>
+                            </span>
+                        </div>
+                        <p class="kpi-value" th:text="${studentCount}">0</p>
+                        <p class="kpi-meta"><span th:text="${activeStudentCount}">0</span> active records</p>
+                    </article>
+
+                    <article class="kpi">
+                        <div class="kpi-top">
+                            <span>Courses</span>
+                            <span class="kpi-icon">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5z"></path><path d="M4 18.5A2.5 2.5 0 0 1 6.5 16H20"></path></svg>
+                            </span>
+                        </div>
+                        <p class="kpi-value" th:text="${courseCount}">0</p>
+                        <p class="kpi-meta">Across the current catalogue</p>
+                    </article>
+
+                    <article class="kpi">
+                        <div class="kpi-top">
+                            <span>Enrollments</span>
+                            <span class="kpi-icon">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="17" rx="2.5"></rect><path d="M8.5 2.5h7v4h-7zM8 11h8M8 15h5"></path></svg>
+                            </span>
+                        </div>
+                        <p class="kpi-value" th:text="${enrollmentCount}">0</p>
+                        <p class="kpi-meta"><span th:text="${gradedCount}">0</span> results recorded</p>
+                    </article>
+
+                    <article class="kpi">
+                        <div class="kpi-top">
+                            <span>Average score</span>
+                            <span class="kpi-icon">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"></path></svg>
+                            </span>
+                        </div>
+                        <p class="kpi-value"
+                           th:text="${averageMarks != null ? #numbers.formatDecimal(averageMarks, 1, 1) + '%' : '—'}">—</p>
+                        <p class="kpi-meta">Across all graded coursework</p>
+                    </article>
+                </section>
+
+                <section class="content-grid">
+                    <div class="stack">
+                        <div class="card">
+                            <div class="card-head">
+                                <div>
+                                    <h2 class="card-title">Top performers</h2>
+                                    <p class="card-subtitle">Students with an average of 75% or more, ranked by score.</p>
+                                </div>
+                                <a class="card-link" th:href="@{/reports}">Full report →</a>
+                            </div>
+
+                            <div class="table-wrap" th:if="${!#lists.isEmpty(topPerformers)}">
+                                <table class="data-table">
+                                    <thead>
+                                    <tr>
+                                        <th>Student</th>
+                                        <th>Department</th>
+                                        <th>Courses</th>
+                                        <th class="text-right">Average</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="performer : ${topPerformers}">
+                                        <td>
+                                            <a class="person-cell" th:href="@{/students/{id}(id=${performer.id})}">
+                                                <span class="avatar" th:text="${performer.initials}">AS</span>
+                                                <span class="person-meta">
+                                                    <strong th:text="${performer.fullName}">Aarav Sharma</strong>
+                                                    <span th:text="${performer.rollNumber}">23BCS001</span>
+                                                </span>
+                                            </a>
+                                        </td>
+                                        <td class="muted" th:text="${performer.department}">B.Sc Computer Science</td>
+                                        <td class="muted" th:text="${performer.courseCount}">5</td>
+                                        <td class="text-right">
+                                            <strong th:text="${#numbers.formatDecimal(performer.averageMarks, 1, 2)} + '%'">90.00%</strong>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="empty-state" th:if="${#lists.isEmpty(topPerformers)}">
+                                <span class="empty-state-icon">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"></path></svg>
+                                </span>
+                                <strong>No performance data yet</strong>
+                                <p>Add enrollments and marks to see the top performers here.</p>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-head">
+                                <div>
+                                    <h2 class="card-title">Course performance</h2>
+                                    <p class="card-subtitle">Average marks per course, computed with an HQL aggregate query.</p>
+                                </div>
+                                <a class="card-link" th:href="@{/reports}">Analyse →</a>
+                            </div>
+
+                            <div class="bar-list" th:if="${!#lists.isEmpty(courseStats)}">
+                                <div class="bar-row" th:each="stat : ${courseStats}">
+                                    <span class="bar-row-label">
+                                        <span class="code-tag" th:text="${stat.code}">CS101</span>
+                                        <span th:text="${stat.title}">Programming in Java</span>
+                                    </span>
+                                    <span class="bar-row-value" th:text="${#numbers.formatDecimal(stat.averageMarks, 1, 1)} + '%'">88.0%</span>
+                                    <span class="bar-track">
+                                        <span class="bar-fill" th:style="|width: ${stat.averageMarks}%|"></span>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="empty-state" th:if="${#lists.isEmpty(courseStats)}">
+                                <strong>No graded courses</strong>
+                                <p>Course averages appear as soon as results are recorded.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stack">
+                        <div class="card">
+                            <div class="card-head">
+                                <div>
+                                    <h2 class="card-title">Service health</h2>
+                                    <p class="card-subtitle">The grading rules run as a separate REST service.</p>
+                                </div>
+                            </div>
+
+                            <div class="service-status">
+                                <span class="status-dot"
+                                      th:classappend="${gradingServiceOnline} ? ' online' : ' offline'"></span>
+                                <div>
+                                    <strong th:text="${gradingServiceOnline ? 'Grading service online' : 'Local fallback active'}">
+                                        Grading service online
+                                    </strong>
+                                    <p th:text="${gradingServiceOnline ? 'Grades are evaluated by the grading microservice at ' + gradingServiceUrl : 'The grading service is not reachable, so grades are calculated locally. Start it on port 8081 for the full demonstration.'}">
+                                        Connected to the grading service.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <details class="disclosure">
+                                <summary>Department distribution (HQL)</summary>
+                                <ul class="mini-list">
+                                    <li th:each="dept : ${departmentStats}">
+                                        <span th:text="${dept.department}">B.Sc Computer Science</span>
+                                        <strong th:text="${dept.studentCount} + ' students'">5 students</strong>
+                                    </li>
+                                </ul>
+                            </details>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-head">
+                                <div>
+                                    <h2 class="card-title">Recent results</h2>
+                                    <p class="card-subtitle">Latest enrollments and awarded grades.</p>
+                                </div>
+                                <a class="card-link" th:href="@{/enrollments}">All →</a>
+                            </div>
+
+                            <ul class="mini-list" th:if="${!#lists.isEmpty(recentEnrollments)}">
+                                <li th:each="enrollment : ${recentEnrollments}">
+                                    <span class="person-cell">
+                                        <span class="avatar avatar-gold" th:text="${enrollment.initials}">AS</span>
+                                        <span class="person-meta">
+                                            <strong th:text="${enrollment.studentName}">Aarav Sharma</strong>
+                                            <span th:text="${enrollment.courseCode + ' · ' + enrollment.courseTitle}">CS101 · Java</span>
+                                        </span>
+                                    </span>
+                                    <span class="badge" th:classappend="${enrollment.gradeCss}" th:text="${enrollment.grade}">A</span>
+                                </li>
+                            </ul>
+
+                            <div class="empty-state" th:if="${#lists.isEmpty(recentEnrollments)}">
+                                <strong>No results recorded</strong>
+                                <p>Record a grade to start building the transcript.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <footer th:replace="~{fragments/layout :: footer}"></footer>
+    </div>
+</div>
+</body>
+</html>

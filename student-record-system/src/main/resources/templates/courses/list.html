@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Courses')}"></head>
+<body>
+<div class="app-shell">
+    <aside th:replace="~{fragments/layout :: sidebar('courses')}"></aside>
+    <div th:replace="~{fragments/layout :: sidebarScrim}"></div>
+
+    <div class="main">
+        <header th:replace="~{fragments/layout :: topbar('Courses', 'Browse the course catalogue, instructors and performance')}"></header>
+
+        <main class="content">
+            <div th:replace="~{fragments/layout :: flash}"></div>
+
+            <div class="stack">
+                <div class="toolbar">
+                    <form class="search-form" th:action="@{/courses}" method="get" role="search">
+                        <label class="search-field">
+                            <span class="visually-hidden">Search courses</span>
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M16.5 16.5L21 21"></path></svg>
+                            <input type="search" name="q" th:value="${query}"
+                                   placeholder="Search by course code, title or department" aria-label="Search courses">
+                        </label>
+                        <button class="btn btn-ghost" type="submit">Search</button>
+                        <a class="btn btn-ghost" th:if="${query != null and !query.isBlank()}" th:href="@{/courses}">Clear</a>
+                    </form>
+                    <span class="result-count" th:text="${resultCount} + ' course(s)'">6 courses</span>
+                    <a class="btn btn-primary" th:href="@{/courses/new}">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+                        Add course
+                    </a>
+                </div>
+
+                <div class="card">
+                    <div class="card-head">
+                        <div>
+                            <h2 class="card-title">Course catalogue</h2>
+                            <p class="card-subtitle">Open a course to see its roster, grade distribution and pass rate.</p>
+                        </div>
+                    </div>
+
+                    <div class="table-wrap" th:if="${!#lists.isEmpty(courses)}">
+                        <table class="data-table">
+                            <thead>
+                            <tr>
+                                <th>Course</th>
+                                <th>Instructor</th>
+                                <th>Credits</th>
+                                <th>Semester</th>
+                                <th>Enrolled</th>
+                                <th>Average</th>
+                                <th class="text-right">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="course : ${courses}">
+                                <td>
+                                    <a class="person-cell" th:href="@{/courses/{id}(id=${course.id})}">
+                                        <span class="avatar avatar-gold" th:text="${#strings.substring(course.code, 0, 2)}">CS</span>
+                                        <span class="person-meta">
+                                            <strong th:text="${course.title}">Programming in Java</strong>
+                                            <span><span class="code-tag" th:text="${course.code}">CS101</span>
+                                                <span th:if="${course.department != null}" th:text="${' · ' + course.department}"> · B.Sc CS</span>
+                                            </span>
+                                        </span>
+                                    </a>
+                                </td>
+                                <td class="muted" th:text="${course.instructorName}">Karthik Subramanian</td>
+                                <td class="muted" th:text="${course.credits}">4</td>
+                                <td class="muted" th:text="${course.semester}">1</td>
+                                <td class="muted" th:text="${course.enrollmentCount}">5</td>
+                                <td>
+                                    <strong th:if="${course.averageMarks != null}"
+                                            th:text="${#numbers.formatDecimal(course.averageMarks, 1, 1)} + '%'">88.0%</strong>
+                                    <span class="muted" th:if="${course.averageMarks == null}">—</span>
+                                </td>
+                                <td>
+                                    <div class="actions">
+                                        <a class="btn btn-ghost btn-sm" th:href="@{/courses/{id}(id=${course.id})}">View</a>
+                                        <a class="btn btn-ghost btn-sm" th:href="@{/courses/{id}/edit(id=${course.id})}">Edit</a>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="empty-state" th:if="${#lists.isEmpty(courses)}">
+                        <span class="empty-state-icon">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5z"></path><path d="M4 18.5A2.5 2.5 0 0 1 6.5 16H20"></path></svg>
+                        </span>
+                        <strong th:text="${query != null and !query.isBlank() ? 'No matching courses' : 'No courses yet'}">No courses yet</strong>
+                        <p th:text="${query != null and !query.isBlank() ? 'Try a different code, title or department.' : 'Add the first course so students can be enrolled.'}">
+                            Add the first course so students can be enrolled.
+                        </p>
+                        <a class="btn btn-primary" th:href="@{/courses/new}">Add course</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer th:replace="~{fragments/layout :: footer}"></footer>
+    </div>
+</div>
+</body>
+</html>

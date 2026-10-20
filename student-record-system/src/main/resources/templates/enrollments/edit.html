@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Edit marks')}"></head>
+<body>
+<div class="app-shell">
+    <aside th:replace="~{fragments/layout :: sidebar('enrollments')}"></aside>
+    <div th:replace="~{fragments/layout :: sidebarScrim}"></div>
+
+    <div class="main">
+        <header th:replace="~{fragments/layout :: topbar('Edit result', 'Correct the marks and recalculate the grade')}"></header>
+
+        <main class="content">
+            <div th:replace="~{fragments/layout :: flash}"></div>
+
+            <div class="breadcrumb">
+                <a th:href="@{/enrollments}">Enrollments</a>
+                <span class="breadcrumb-sep">/</span>
+                <span th:text="${enrollment.studentName + ' · ' + enrollment.courseCode}">Aarav Sharma · CS101</span>
+            </div>
+
+            <div class="form-layout">
+                <form class="card form-card" th:action="@{/enrollments/{id}(id=${enrollment.id})}"
+                      method="post" th:object="${markForm}">
+                    <div class="form-section">
+                        <h2 class="form-section-title" th:text="${enrollment.studentName}">Aarav Sharma</h2>
+                        <p class="form-section-note">
+                            <span th:text="${enrollment.courseCode + ' · ' + enrollment.courseTitle}">CS101 · Programming in Java</span>
+                            <span th:text="${' · ' + enrollment.credits + ' credits · Semester ' + enrollment.semester}"> · 4 credits · Semester 1</span>
+                        </p>
+
+                        <div class="form-error-summary" th:if="${#fields.hasErrors('marks')}">
+                            <strong>Please check the marks:</strong>
+                            <ul>
+                                <li th:each="error : ${#fields.errors('marks')}" th:text="${error}">Error</li>
+                            </ul>
+                        </div>
+
+                        <div class="form-grid">
+                            <div class="form-field">
+                                <label for="marks">Updated marks (out of 100) <span class="required">*</span></label>
+                                <input id="marks" type="number" step="0.01" min="0" max="100"
+                                       th:field="*{marks}" th:errorclass="input-error" data-marks-input>
+                                <p class="field-error" th:if="${#fields.hasErrors('marks')}" th:errors="*{marks}"></p>
+                            </div>
+
+                            <div class="form-field">
+                                <label>Current result</label>
+                                <div class="checkbox-field" style="justify-content: space-between;">
+                                    <span>
+                                        <strong th:text="${#numbers.formatDecimal(enrollment.marks, 1, 1)} + '%'">92.0%</strong>
+                                        · <span th:text="${enrollment.grade}">A+</span>
+                                    </span>
+                                    <span class="badge" th:classappend="${enrollment.gradeCss}" th:text="${enrollment.grade}">A+</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <a class="btn btn-ghost" th:href="@{/enrollments}">Cancel</a>
+                        <button class="btn btn-primary" type="submit">Update grade</button>
+                    </div>
+                </form>
+
+                <aside class="stack">
+                    <div class="card aside-card">
+                        <h3>Result details</h3>
+                        <dl class="info-list">
+                            <div class="info-row"><dt>Student</dt><dd th:text="${enrollment.studentName}">Aarav Sharma</dd></div>
+                            <div class="info-row"><dt>Roll number</dt><dd th:text="${enrollment.rollNumber}">23BCS001</dd></div>
+                            <div class="info-row"><dt>Course</dt><dd th:text="${enrollment.courseCode}">CS101</dd></div>
+                            <div class="info-row"><dt>Credits</dt><dd th:text="${enrollment.credits}">4</dd></div>
+                            <div class="info-row"><dt>Graded by</dt><dd th:text="${enrollment.gradedBy}">grading-service</dd></div>
+                            <div class="info-row"><dt>Recorded on</dt>
+                                <dd th:text="${#temporals.format(enrollment.enrolledOn, 'dd MMM yyyy')}">01 Oct 2026</dd>
+                            </div>
+                        </dl>
+                    </div>
+
+                    <div class="card aside-card">
+                        <h3>Recalculation</h3>
+                        <p>
+                            Changing the marks calls the grading service again and replaces the letter grade and
+                            grade point. The transcript and GPA update automatically.
+                        </p>
+                    </div>
+                </aside>
+            </div>
+        </main>
+
+        <footer th:replace="~{fragments/layout :: footer}"></footer>
+    </div>
+</div>
+</body>
+</html>

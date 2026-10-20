@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Student profile')}"></head>
+<body>
+<div class="app-shell">
+    <aside th:replace="~{fragments/layout :: sidebar('students')}"></aside>
+    <div th:replace="~{fragments/layout :: sidebarScrim}"></div>
+
+    <div class="main">
+        <header th:replace="~{fragments/layout :: topbar('Student profile', 'Personal details, transcript and academic progress')}"></header>
+
+        <main class="content">
+            <div th:replace="~{fragments/layout :: flash}"></div>
+
+            <div class="stack">
+                <div class="breadcrumb">
+                    <a th:href="@{/students}">Students</a>
+                    <span class="breadcrumb-sep">/</span>
+                    <span th:text="${student.fullName}">Aarav Sharma</span>
+                </div>
+
+                <section class="detail-hero">
+                    <div class="detail-identity">
+                        <span class="avatar avatar-lg avatar-gold" th:text="${student.initials}">AS</span>
+                        <div>
+                            <h2 th:text="${student.fullName}">Aarav Sharma</h2>
+                            <p th:text="${student.rollNumber + ' · ' + student.department}">23BCS001 · B.Sc Computer Science</p>
+                            <div class="detail-badges">
+                                <span class="badge badge-dot"
+                                      th:classappend="${student.active} ? ' badge-active' : ' badge-inactive'"
+                                      th:text="${student.active ? 'Active student' : 'Inactive'}">Active student</span>
+                                <span class="badge badge-neutral" th:text="${'Admitted ' + student.admissionYear}">Admitted 2023</span>
+                                <span class="badge badge-gold" th:text="${detail.gradedCourses} + ' graded courses'">5 graded courses</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="detail-actions">
+                        <a class="btn btn-ghost" th:href="@{/students/{id}/edit(id=${student.id})}">Edit profile</a>
+                        <a class="btn btn-primary" th:href="@{/enrollments/new(studentId=${student.id})}">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+                            Enroll in course
+                        </a>
+                        <form th:action="@{/students/{id}/delete(id=${student.id})}" method="post"
+                              data-confirm="Delete this student and all related enrollments? This cannot be undone.">
+                            <button class="btn btn-danger" type="submit">Delete</button>
+                        </form>
+                    </div>
+                </section>
+
+                <section class="stat-grid" aria-label="Academic totals">
+                    <div class="stat-tile">
+                        <p class="stat-tile-label">Cumulative GPA</p>
+                        <p class="stat-tile-value" th:text="${detail.gpa > 0 ? #numbers.formatDecimal(detail.gpa, 1, 2) : '—'}">9.20</p>
+                    </div>
+                    <div class="stat-tile">
+                        <p class="stat-tile-label">Average marks</p>
+                        <p class="stat-tile-value"
+                           th:text="${student.averageMarks != null ? #numbers.formatDecimal(student.averageMarks, 1, 1) + '%' : '—'}">89.0%</p>
+                    </div>
+                    <div class="stat-tile">
+                        <p class="stat-tile-label">Credits enrolled</p>
+                        <p class="stat-tile-value" th:text="${#numbers.formatDecimal(detail.totalCredits, 1, 0)}">18</p>
+                    </div>
+                    <div class="stat-tile">
+                        <p class="stat-tile-label">Courses passed</p>
+                        <p class="stat-tile-value"><span th:text="${detail.passedCourses}">5</span> <small>/ <span th:text="${detail.gradedCourses}">5</span></small></p>
+                    </div>
+                </section>
+
+                <section class="content-grid-wide">
+                    <div class="card">
+                        <div class="card-head">
+                            <div>
+                                <h2 class="card-title">Academic transcript</h2>
+                                <p class="card-subtitle">Credit-weighted results for every recorded enrollment.</p>
+                            </div>
+                            <a class="card-link" th:href="@{/reports}">Performance reports →</a>
+                        </div>
+
+                        <div class="table-wrap" th:if="${!#lists.isEmpty(detail.enrollments)}">
+                            <table class="data-table">
+                                <thead>
+                                <tr>
+                                    <th>Course</th>
+                                    <th>Credits</th>
+                                    <th>Marks</th>
+                                    <th>Grade</th>
+                                    <th>Points</th>
+                                    <th>Graded by</th>
+                                    <th>Date</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="enrollment : ${detail.enrollments}">
+                                    <td>
+                                        <a class="row-link" th:href="@{/courses/{id}(id=${enrollment.courseId})}">
+                                            <span class="code-tag" th:text="${enrollment.courseCode}">CS101</span>
+                                            <span th:text="${enrollment.courseTitle}">Programming in Java</span>
+                                        </a>
+                                    </td>
+                                    <td class="muted" th:text="${enrollment.credits}">4</td>
+                                    <td><strong th:text="${#numbers.formatDecimal(enrollment.marks, 1, 1)} + '%'">92.0%</strong></td>
+                                    <td><span class="badge" th:classappend="${enrollment.gradeCss}" th:text="${enrollment.grade}">A+</span></td>
+                                    <td class="muted" th:text="${#numbers.formatDecimal(enrollment.gradePoint, 1, 1)}">10.0</td>
+                                    <td>
+                                        <span class="badge"
+                                              th:classappend="${enrollment.gradedBy == 'grading-service'} ? ' badge-gold' : ' badge-neutral'"
+                                              th:text="${enrollment.gradedBy}">grading-service</span>
+                                    </td>
+                                    <td class="muted nowrap" th:text="${#temporals.format(enrollment.enrolledOn, 'dd MMM yyyy')}">01 Oct 2026</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="empty-state" th:if="${#lists.isEmpty(detail.enrollments)}">
+                            <span class="empty-state-icon">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5z"></path><path d="M4 18.5A2.5 2.5 0 0 1 6.5 16H20"></path></svg>
+                            </span>
+                            <strong>No courses enrolled</strong>
+                            <p>Enroll this student in a course and record marks to build the transcript.</p>
+                            <a class="btn btn-primary" th:href="@{/enrollments/new(studentId=${student.id})}">Enroll in a course</a>
+                        </div>
+
+                        <div class="transcript-total" th:if="${!#lists.isEmpty(detail.enrollments)}">
+                            <span>Total credits: <strong th:text="${#numbers.formatDecimal(detail.totalCredits, 1, 0)}">18</strong></span>
+                            <span>Cumulative GPA: <strong th:text="${detail.gpa > 0 ? #numbers.formatDecimal(detail.gpa, 1, 2) : '—'}">9.20</strong></span>
+                        </div>
+                    </div>
+
+                    <aside class="stack">
+                        <div class="card aside-card">
+                            <h3>Contact information</h3>
+                            <dl class="info-list">
+                                <div class="info-row"><dt>Email</dt><dd th:text="${student.email}">aarav@student.scholaris.edu</dd></div>
+                                <div class="info-row"><dt>Phone</dt><dd th:text="${student.phone ?: 'Not provided'}">98400 12345</dd></div>
+                                <div class="info-row"><dt>Date of birth</dt>
+                                    <dd th:text="${student.dateOfBirth != null ? #temporals.format(student.dateOfBirth, 'dd MMM yyyy') : 'Not provided'}">12 Apr 2005</dd>
+                                </div>
+                                <div class="info-row"><dt>Admission year</dt><dd th:text="${student.admissionYear}">2023</dd></div>
+                                <div class="info-row"><dt>Department</dt><dd th:text="${student.department}">B.Sc Computer Science</dd></div>
+                                <div class="info-row"><dt>Record status</dt><dd th:text="${student.active ? 'Active' : 'Inactive'}">Active</dd></div>
+                            </dl>
+                        </div>
+
+                        <div class="card aside-card">
+                            <h3>How GPA is calculated</h3>
+                            <p>
+                                GPA is the credit-weighted average of grade points. A 4-credit course therefore
+                                influences the GPA more than a 3-credit course.
+                            </p>
+                            <div class="info-grid">
+                                <div class="info-box"><span>Formula</span><strong>Σ(point × credits) / Σcredits</strong></div>
+                                <div class="info-box"><span>Scale</span><strong>10-point scale</strong></div>
+                            </div>
+                        </div>
+                    </aside>
+                </section>
+            </div>
+        </main>
+
+        <footer th:replace="~{fragments/layout :: footer}"></footer>
+    </div>
+</div>
+</body>
+</html>

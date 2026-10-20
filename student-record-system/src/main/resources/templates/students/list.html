@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Students')}"></head>
+<body>
+<div class="app-shell">
+    <aside th:replace="~{fragments/layout :: sidebar('students')}"></aside>
+    <div th:replace="~{fragments/layout :: sidebarScrim}"></div>
+
+    <div class="main">
+        <header th:replace="~{fragments/layout :: topbar('Students', 'Manage personal details, academic records and transcripts')}"></header>
+
+        <main class="content">
+            <div th:replace="~{fragments/layout :: flash}"></div>
+
+            <div class="stack">
+                <div class="toolbar">
+                    <form class="search-form" th:action="@{/students}" method="get" role="search">
+                        <label class="search-field">
+                            <span class="visually-hidden">Search students</span>
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M16.5 16.5L21 21"></path></svg>
+                            <input type="search" name="q" th:value="${query}"
+                                   placeholder="Search by name, roll number or department" aria-label="Search students">
+                        </label>
+                        <button class="btn btn-ghost" type="submit">Search</button>
+                        <a class="btn btn-ghost" th:if="${query != null and !query.isBlank()}" th:href="@{/students}">Clear</a>
+                    </form>
+                    <span class="result-count" th:text="${resultCount} + ' record(s)'">9 records</span>
+                    <a class="btn btn-primary" th:href="@{/students/new}">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+                        Add student
+                    </a>
+                </div>
+
+                <div class="card">
+                    <div class="card-head">
+                        <div>
+                            <h2 class="card-title">Student directory</h2>
+                            <p class="card-subtitle">Select a student to open their transcript and academic profile.</p>
+                        </div>
+                    </div>
+
+                    <div class="table-wrap" th:if="${!#lists.isEmpty(students)}">
+                        <table class="data-table">
+                            <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Department</th>
+                                <th>Admission</th>
+                                <th>Courses</th>
+                                <th>Average</th>
+                                <th>GPA</th>
+                                <th>Status</th>
+                                <th class="text-right">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="student : ${students}">
+                                <td>
+                                    <a class="person-cell" th:href="@{/students/{id}(id=${student.id})}">
+                                        <span class="avatar" th:text="${student.initials}">AS</span>
+                                        <span class="person-meta">
+                                            <strong th:text="${student.fullName}">Aarav Sharma</strong>
+                                            <span th:text="${student.rollNumber}">23BCS001</span>
+                                        </span>
+                                    </a>
+                                </td>
+                                <td class="muted" th:text="${student.department}">B.Sc Computer Science</td>
+                                <td class="muted" th:text="${student.admissionYear}">2023</td>
+                                <td class="muted" th:text="${student.courseCount}">5</td>
+                                <td>
+                                    <strong th:if="${student.averageMarks != null}"
+                                            th:text="${#numbers.formatDecimal(student.averageMarks, 1, 1)} + '%'">89.0%</strong>
+                                    <span class="muted" th:if="${student.averageMarks == null}">—</span>
+                                </td>
+                                <td>
+                                    <strong th:if="${student.gpa != null}"
+                                            th:text="${#numbers.formatDecimal(student.gpa, 1, 2)}">9.20</strong>
+                                    <span class="muted" th:if="${student.gpa == null}">—</span>
+                                </td>
+                                <td>
+                                    <span class="badge badge-dot"
+                                          th:classappend="${student.active} ? ' badge-active' : ' badge-inactive'"
+                                          th:text="${student.active ? 'Active' : 'Inactive'}">Active</span>
+                                </td>
+                                <td>
+                                    <div class="actions">
+                                        <a class="btn btn-ghost btn-sm" th:href="@{/students/{id}(id=${student.id})}">View</a>
+                                        <a class="btn btn-ghost btn-sm" th:href="@{/students/{id}/edit(id=${student.id})}">Edit</a>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="empty-state" th:if="${#lists.isEmpty(students)}">
+                        <span class="empty-state-icon">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"></circle><path d="M3.5 19c0-3 2.5-5 5.5-5s5.5 2 5.5 5M19 8v6M16 11h6"></path></svg>
+                        </span>
+                        <strong th:text="${query != null and !query.isBlank() ? 'No matching students' : 'No students yet'}">No students yet</strong>
+                        <p th:text="${query != null and !query.isBlank() ? 'Try a different name, roll number or department.' : 'Add the first student record to begin building the directory.'}">
+                            Add the first student record to begin building the directory.
+                        </p>
+                        <a class="btn btn-primary" th:href="@{/students/new}">Add student</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer th:replace="~{fragments/layout :: footer}"></footer>
+    </div>
+</div>
+</body>
+</html>

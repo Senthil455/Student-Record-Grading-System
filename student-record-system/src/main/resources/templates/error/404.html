@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Page not found')}"></head>
+<body>
+<div class="app-shell">
+    <aside th:replace="~{fragments/layout :: sidebar('')}"></aside>
+    <div th:replace="~{fragments/layout :: sidebarScrim}"></div>
+
+    <div class="main">
+        <header th:replace="~{fragments/layout :: topbar('Page not found', 'The record you requested could not be located')}"></header>
+
+        <main class="content">
+            <div class="error-page">
+                <span class="error-code">404</span>
+                <h1>We could not find that record.</h1>
+                <p th:text="${message} ?: 'The page or record may have been moved, deleted, or the address may be incorrect.'">
+                    The page or record may have been moved or deleted.
+                </p>
+                <div class="detail-actions" style="margin-top: 12px;">
+                    <a class="btn btn-primary" th:href="@{/}">Back to dashboard</a>
+                    <a class="btn btn-ghost" th:href="@{/students}">Browse students</a>
+                </div>
+            </div>
+        </main>
+
+        <footer th:replace="~{fragments/layout :: footer}"></footer>
+    </div>
+</div>
+</body>
+</html>

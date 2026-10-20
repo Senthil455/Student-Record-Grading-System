@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Reports')}"></head>
+<body>
+<div class="app-shell">
+    <aside th:replace="~{fragments/layout :: sidebar('reports')}"></aside>
+    <div th:replace="~{fragments/layout :: sidebarScrim}"></div>
+
+    <div class="main">
+        <header th:replace="~{fragments/layout :: topbar('Reports', 'HQL analytics, cohort insights and Hibernate internals')}"></header>
+
+        <main class="content">
+            <div th:replace="~{fragments/layout :: flash}"></div>
+
+            <div class="stack">
+                <section class="card">
+                    <div class="card-head">
+                        <div>
+                            <span class="eyebrow" style="margin-bottom: 4px;">Institutional analytics</span>
+                            <h2 class="card-title" style="font-size: 24px;">Academic performance at a glance</h2>
+                            <p class="card-subtitle">These reports are produced by explicit HQL queries, not in-memory filtering.</p>
+                        </div>
+                        <span class="badge badge-gold">Read-only</span>
+                    </div>
+                    <div class="report-summary">
+                        <div><span>Overall average</span><strong th:text="${overallAverage != null ? #numbers.formatDecimal(overallAverage, 1, 2) + '%' : '—'}">81.45%</strong></div>
+                        <div><span>Courses analysed</span><strong th:text="${#lists.size(courseStats)}">6</strong></div>
+                        <div><span>Top performer threshold</span><strong th:text="${#numbers.formatDecimal(minAverage, 1, 0)} + '%'">75%</strong></div>
+                        <div><span>Departments</span><strong th:text="${#lists.size(departmentStats)}">2</strong></div>
+                    </div>
+                </section>
+
+                <div class="report-grid">
+                    <section class="card card-full">
+                        <div class="card-head">
+                            <div>
+                                <h2 class="card-title">Course performance</h2>
+                                <p class="card-subtitle">Aggregate marks, highest and lowest score for every graded course.</p>
+                            </div>
+                            <span class="query-tag">HQL · GROUP BY + AVG/MAX/MIN</span>
+                        </div>
+
+                        <div class="table-wrap" th:if="${!#lists.isEmpty(courseStats)}">
+                            <table class="data-table">
+                                <thead>
+                                <tr>
+                                    <th>Course</th>
+                                    <th>Enrolled</th>
+                                    <th>Average</th>
+                                    <th>Highest</th>
+                                    <th>Lowest</th>
+                                    <th style="width: 24%;">Distribution</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="stat : ${courseStats}">
+                                    <td>
+                                        <span class="code-tag" th:text="${stat.code}">CS101</span>
+                                        <strong th:text="${stat.title}">Programming in Java</strong>
+                                    </td>
+                                    <td class="muted" th:text="${stat.enrollmentCount}">5</td>
+                                    <td><strong th:text="${#numbers.formatDecimal(stat.averageMarks, 1, 1)} + '%'">88.0%</strong></td>
+                                    <td class="muted" th:text="${#numbers.formatDecimal(stat.highestMarks, 1, 1)} + '%'">96.0%</td>
+                                    <td class="muted" th:text="${#numbers.formatDecimal(stat.lowestMarks, 1, 1)} + '%'">58.0%</td>
+                                    <td>
+                                        <div class="bar-track">
+                                            <div class="bar-fill bar-fill-blue" th:style="|width: ${stat.averageMarks}%|"></div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <section class="card">
+                        <div class="card-head">
+                            <div>
+                                <h2 class="card-title">Top performers</h2>
+                                <p class="card-subtitle">Students at or above the selected average.</p>
+                            </div>
+                            <form class="inline-form" th:action="@{/reports}" method="get">
+                                <label for="minAverage" class="visually-hidden">Minimum average</label>
+                                <input id="minAverage" type="number" name="minAverage" min="0" max="100" step="1"
+                                       th:value="${minAverage}">
+                                <button class="btn btn-ghost btn-sm" type="submit">Apply</button>
+                            </form>
+                        </div>
+
+                        <div class="table-wrap" th:if="${!#lists.isEmpty(topPerformers)}">
+                            <table class="data-table">
+                                <thead>
+                                <tr><th>Student</th><th>Average</th><th>Courses</th></tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="performer : ${topPerformers}">
+                                    <td>
+                                        <a class="person-cell" th:href="@{/students/{id}(id=${performer.id})}">
+                                            <span class="avatar" th:text="${performer.initials}">AI</span>
+                                            <span class="person-meta">
+                                                <strong th:text="${performer.fullName}">Ananya Iyer</strong>
+                                                <span th:text="${performer.rollNumber + ' · ' + performer.department}">23BCS004 · B.Sc CS</span>
+                                            </span>
+                                        </a>
+                                    </td>
+                                    <td><strong th:text="${#numbers.formatDecimal(performer.averageMarks, 1, 2)} + '%'">93.80%</strong></td>
+                                    <td class="muted" th:text="${performer.courseCount}">5</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="empty-state" th:if="${#lists.isEmpty(topPerformers)}">
+                            <strong>No students meet this threshold</strong>
+                            <p>Lower the minimum average to widen the report.</p>
+                        </div>
+                        <p class="small muted" style="margin: 12px 0 0;">
+                            <span class="query-tag">HQL</span> JOIN + GROUP BY + HAVING on the enrollment average.
+                        </p>
+                    </section>
+
+                    <section class="card">
+                        <div class="card-head">
+                            <div>
+                                <h2 class="card-title">Department distribution</h2>
+                                <p class="card-subtitle">Student count grouped by department.</p>
+                            </div>
+                            <span class="query-tag">HQL · COUNT</span>
+                        </div>
+                        <div class="bar-list" th:if="${!#lists.isEmpty(departmentStats)}">
+                            <div class="bar-row" th:each="dept : ${departmentStats}">
+                                <span class="bar-row-label" th:text="${dept.department}">B.Sc Computer Science</span>
+                                <span class="bar-row-value" th:text="${dept.studentCount}">5</span>
+                                <span class="bar-track">
+                                    <span class="bar-fill bar-fill-green" th:style="|width: ${dept.studentCount * 16}px|"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="card">
+                        <div class="card-head">
+                            <div>
+                                <h2 class="card-title">Grade distribution</h2>
+                                <p class="card-subtitle">How many enrollments received each letter grade.</p>
+                            </div>
+                            <span class="query-tag">HQL · GROUP BY</span>
+                        </div>
+                        <div class="grade-strip" th:if="${!#lists.isEmpty(gradeDistribution)}">
+                            <div class="grade-chip" th:each="grade : ${gradeDistribution}">
+                                <strong th:text="${grade.grade}">A+</strong>
+                                <span th:text="${grade.count} + ' results'">4 results</span>
+                            </div>
+                        </div>
+                        <div class="empty-state" th:if="${#lists.isEmpty(gradeDistribution)}">
+                            <strong>No grades recorded</strong>
+                            <p>Grade counts appear after marks are entered.</p>
+                        </div>
+                    </section>
+
+                    <section class="card card-full">
+                        <div class="card-head">
+                            <div>
+                                <h2 class="card-title">Students without enrollments</h2>
+                                <p class="card-subtitle">A subquery identifies records that still need a course.</p>
+                            </div>
+                            <span class="query-tag">HQL · NOT IN (subquery)</span>
+                        </div>
+
+                        <div class="table-wrap" th:if="${!#lists.isEmpty(studentsWithoutEnrollments)}">
+                            <table class="data-table">
+                                <thead>
+                                <tr><th>Student</th><th>Department</th><th>Admission year</th><th class="text-right">Action</th></tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="student : ${studentsWithoutEnrollments}">
+                                    <td>
+                                        <a class="person-cell" th:href="@{/students/{id}(id=${student.id})}">
+                                            <span class="avatar" th:text="${student.initials}">RD</span>
+                                            <span class="person-meta">
+                                                <strong th:text="${student.fullName}">Rohan Das</strong>
+                                                <span th:text="${student.rollNumber}">23BCS009</span>
+                                            </span>
+                                        </a>
+                                    </td>
+                                    <td class="muted" th:text="${student.department}">B.Sc Computer Science</td>
+                                    <td class="muted" th:text="${student.admissionYear}">2024</td>
+                                    <td class="text-right">
+                                        <a class="btn btn-ghost btn-sm" th:href="@{/enrollments/new(studentId=${student.id})}">Enroll</a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="empty-state" th:if="${#lists.isEmpty(studentsWithoutEnrollments)}">
+                            <strong>Every student has at least one enrollment</strong>
+                            <p>That is a healthy sign. New records without courses will appear here.</p>
+                        </div>
+                    </section>
+
+                    <section class="card card-full">
+                        <div class="card-head">
+                            <div>
+                                <h2 class="card-title">Hibernate internals</h2>
+                                <p class="card-subtitle">Live SessionFactory metadata and HQL executed with an explicit Session and Transaction.</p>
+                            </div>
+                            <span class="badge badge-navy">For the viva</span>
+                        </div>
+
+                        <div class="info-grid">
+                            <div class="info-box">
+                                <span>Hibernate version</span>
+                                <strong th:text="${sessionFactoryInfo['hibernateVersion']}">6.x</strong>
+                            </div>
+                            <div class="info-box">
+                                <span>SessionFactory</span>
+                                <strong th:text="${sessionFactoryInfo['sessionFactoryOpen'] ? 'Open and ready' : 'Closed'}">Open and ready</strong>
+                            </div>
+                            <div class="info-box">
+                                <span>Mapped entities</span>
+                                <strong th:text="${sessionFactoryInfo['entityCount']}">5</strong>
+                            </div>
+                            <div class="info-box">
+                                <span>JDBC URL</span>
+                                <strong th:text="${sessionFactoryInfo['jdbcUrl']}">jdbc:h2:file...</strong>
+                            </div>
+                            <div class="info-box">
+                                <span>Dialect</span>
+                                <strong th:text="${sessionFactoryInfo['dialect']}">H2Dialect</strong>
+                            </div>
+                            <div class="info-box">
+                                <span>SessionFactory class</span>
+                                <strong th:text="${sessionFactoryInfo['sessionFactoryClass']}">SessionFactoryImpl</strong>
+                            </div>
+                        </div>
+
+                        <details class="disclosure" open>
+                            <summary>Run HQL through a raw Hibernate Session (threshold 80%)</summary>
+                            <div class="table-wrap" th:if="${!#lists.isEmpty(hibernateTopPerformers)}">
+                                <table class="data-table">
+                                    <thead>
+                                    <tr><th>Roll number</th><th>Student</th><th class="text-right">Average</th></tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="row : ${hibernateTopPerformers}">
+                                        <td><span class="code-tag" th:text="${row['rollNumber']}">23BCS004</span></td>
+                                        <td th:text="${row['studentName']}">Ananya Iyer</td>
+                                        <td class="text-right"><strong th:text="${#numbers.formatDecimal(row['averageMarks'], 1, 2)} + '%'">93.80%</strong></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </details>
+
+                        <pre class="code-block"><code><span class="accent">SessionFactory</span> factory = entityManagerFactory.unwrap(SessionFactory.class);
+<span class="accent">try</span> (Session session = factory.openSession()) {
+    <span class="accent">Transaction</span> tx = session.beginTransaction();
+    List&lt;Object[]&gt; rows = session.createQuery(HQL, Object[].class).list();
+    tx.commit();   <span style="color:#8fa2bb;">// rollback on failure</span>
+}</code></pre>
+                    </section>
+                </div>
+            </div>
+        </main>
+
+        <footer th:replace="~{fragments/layout :: footer}"></footer>
+    </div>
+</div>
+</body>
+</html>

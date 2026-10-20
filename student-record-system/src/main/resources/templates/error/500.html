@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Server error')}"></head>
+<body>
+<div class="app-shell">
+    <aside th:replace="~{fragments/layout :: sidebar('')}"></aside>
+    <div th:replace="~{fragments/layout :: sidebarScrim}"></div>
+
+    <div class="main">
+        <header th:replace="~{fragments/layout :: topbar('Something went wrong', 'The application could not complete this request')}"></header>
+
+        <main class="content">
+            <div class="error-page">
+                <span class="error-code">500</span>
+                <h1>A small hiccup on our side.</h1>
+                <p th:text="${message} ?: 'An unexpected error occurred. Please try again, or return to the dashboard.'">
+                    An unexpected error occurred.
+                </p>
+                <div class="detail-actions" style="margin-top: 12px;">
+                    <a class="btn btn-primary" th:href="@{/}">Back to dashboard</a>
+                    <a class="btn btn-ghost" th:href="@{/reports}">Open reports</a>
+                </div>
+            </div>
+        </main>
+
+        <footer th:replace="~{fragments/layout :: footer}"></footer>
+    </div>
+</div>
+</body>
+</html>

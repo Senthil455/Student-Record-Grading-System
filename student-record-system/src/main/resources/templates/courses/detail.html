@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Course details')}"></head>
+<body>
+<div class="app-shell">
+    <aside th:replace="~{fragments/layout :: sidebar('courses')}"></aside>
+    <div th:replace="~{fragments/layout :: sidebarScrim}"></div>
+
+    <div class="main">
+        <header th:replace="~{fragments/layout :: topbar('Course details', 'Roster, grade distribution and course performance')}"></header>
+
+        <main class="content">
+            <div th:replace="~{fragments/layout :: flash}"></div>
+
+            <div class="stack">
+                <div class="breadcrumb">
+                    <a th:href="@{/courses}">Courses</a>
+                    <span class="breadcrumb-sep">/</span>
+                    <span th:text="${course.code}">CS101</span>
+                </div>
+
+                <section class="detail-hero">
+                    <div class="detail-identity">
+                        <span class="avatar avatar-lg avatar-gold" th:text="${#strings.substring(course.code, 0, 2)}">CS</span>
+                        <div>
+                            <h2 th:text="${course.title}">Programming in Java</h2>
+                            <p th:text="${course.code + ' · Semester ' + course.semester + ' · ' + course.instructorName}">
+                                CS101 · Semester 1 · Karthik Subramanian
+                            </p>
+                            <div class="detail-badges">
+                                <span class="badge badge-gold" th:text="${course.credits} + ' credits'">4 credits</span>
+                                <span class="badge badge-neutral" th:if="${course.department != null}" th:text="${course.department}">B.Sc CS</span>
+                                <span class="badge badge-active badge-dot">Active course</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="detail-actions">
+                        <a class="btn btn-ghost" th:href="@{/courses/{id}/edit(id=${course.id})}">Edit course</a>
+                        <a class="btn btn-primary" th:href="@{/enrollments/new(courseId=${course.id})}">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+                            Enroll a student
+                        </a>
+                        <form th:action="@{/courses/{id}/delete(id=${course.id})}" method="post"
+                              data-confirm="Delete this course and all related enrollments? This cannot be undone.">
+                            <button class="btn btn-danger" type="submit">Delete</button>
+                        </form>
+                    </div>
+                </section>
+
+                <section class="stat-grid" aria-label="Course statistics">
+                    <div class="stat-tile">
+                        <p class="stat-tile-label">Enrolled students</p>
+                        <p class="stat-tile-value" th:text="${course.enrollmentCount}">5</p>
+                    </div>
+                    <div class="stat-tile">
+                        <p class="stat-tile-label">Average marks</p>
+                        <p class="stat-tile-value"
+                           th:text="${course.averageMarks != null ? #numbers.formatDecimal(course.averageMarks, 1, 1) + '%' : '—'}">88.0%</p>
+                    </div>
+                    <div class="stat-tile">
+                        <p class="stat-tile-label">Pass rate</p>
+                        <p class="stat-tile-value" th:text="${#numbers.formatDecimal(detail.passRate, 1, 1)} + '%'">100.0%</p>
+                    </div>
+                    <div class="stat-tile">
+                        <p class="stat-tile-label">Credits</p>
+                        <p class="stat-tile-value" th:text="${course.credits}">4</p>
+                    </div>
+                </section>
+
+                <section class="content-grid-wide">
+                    <div class="card">
+                        <div class="card-head">
+                            <div>
+                                <h2 class="card-title">Course roster</h2>
+                                <p class="card-subtitle">Every student enrolled in this course with their result.</p>
+                            </div>
+                            <span class="query-tag">HQL join fetch</span>
+                        </div>
+
+                        <div class="table-wrap" th:if="${!#lists.isEmpty(detail.enrollments)}">
+                            <table class="data-table">
+                                <thead>
+                                <tr>
+                                    <th>Student</th>
+                                    <th>Marks</th>
+                                    <th>Grade</th>
+                                    <th>Points</th>
+                                    <th class="text-right">Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="enrollment : ${detail.enrollments}">
+                                    <td>
+                                        <a class="person-cell" th:href="@{/students/{id}(id=${enrollment.studentId})}">
+                                            <span class="avatar" th:text="${enrollment.initials}">AS</span>
+                                            <span class="person-meta">
+                                                <strong th:text="${enrollment.studentName}">Aarav Sharma</strong>
+                                                <span th:text="${enrollment.rollNumber}">23BCS001</span>
+                                            </span>
+                                        </a>
+                                    </td>
+                                    <td><strong th:text="${#numbers.formatDecimal(enrollment.marks, 1, 1)} + '%'">92.0%</strong></td>
+                                    <td><span class="badge" th:classappend="${enrollment.gradeCss}" th:text="${enrollment.grade}">A+</span></td>
+                                    <td class="muted" th:text="${#numbers.formatDecimal(enrollment.gradePoint, 1, 1)}">10.0</td>
+                                    <td>
+                                        <div class="actions">
+                                            <a class="btn btn-ghost btn-sm" th:href="@{/enrollments/{id}/edit(id=${enrollment.id})}">Edit marks</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="empty-state" th:if="${#lists.isEmpty(detail.enrollments)}">
+                            <span class="empty-state-icon">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5z"></path><path d="M4 18.5A2.5 2.5 0 0 1 6.5 16H20"></path></svg>
+                            </span>
+                            <strong>No students enrolled</strong>
+                            <p>Enroll a student and record marks to populate this roster.</p>
+                            <a class="btn btn-primary" th:href="@{/enrollments/new(courseId=${course.id})}">Enroll a student</a>
+                        </div>
+                    </div>
+
+                    <aside class="stack">
+                        <div class="card aside-card">
+                            <h3>Course information</h3>
+                            <dl class="info-list">
+                                <div class="info-row"><dt>Code</dt><dd th:text="${course.code}">CS101</dd></div>
+                                <div class="info-row"><dt>Department</dt><dd th:text="${course.department ?: 'Not specified'}">B.Sc CS</dd></div>
+                                <div class="info-row"><dt>Semester</dt><dd th:text="${course.semester}">1</dd></div>
+                                <div class="info-row"><dt>Credits</dt><dd th:text="${course.credits}">4</dd></div>
+                                <div class="info-row"><dt>Instructor</dt><dd th:text="${course.instructorName}">Karthik Subramanian</dd></div>
+                            </dl>
+                            <p class="small muted" th:if="${course.description != null}" th:text="${course.description}">
+                                Object-oriented programming, collections and exceptions.
+                            </p>
+                        </div>
+
+                        <div class="card aside-card">
+                            <h3>Grade distribution</h3>
+                            <p>Number of students awarded each letter grade in this course.</p>
+                            <div class="grade-strip">
+                                <div class="grade-chip" th:each="entry : ${detail.gradeCounts}">
+                                    <strong th:text="${entry.key}">A+</strong>
+                                    <span th:text="${entry.value} + ' students'">2 students</span>
+                                </div>
+                            </div>
+                            <div class="distribution" style="margin-top: 16px;">
+                                <div class="distribution-row" th:each="entry : ${detail.gradeCounts}">
+                                    <span class="badge" th:classappend="${detail.gradeCss(entry.key)}"
+                                          th:text="${entry.key}">A</span>
+                                    <span class="distribution-bar"><span th:style="|width: ${entry.value * 18}px|"></span></span>
+                                    <strong th:text="${entry.value}">2</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
+                </section>
+            </div>
+        </main>
+
+        <footer th:replace="~{fragments/layout :: footer}"></footer>
+    </div>
+</div>
+</body>
+</html>

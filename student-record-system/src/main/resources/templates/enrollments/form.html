@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('New enrollment')}"></head>
+<body>
+<div class="app-shell">
+    <aside th:replace="~{fragments/layout :: sidebar('enrollments')}"></aside>
+    <div th:replace="~{fragments/layout :: sidebarScrim}"></div>
+
+    <div class="main">
+        <header th:replace="~{fragments/layout :: topbar('Record a result', 'Enroll a student and evaluate their marks')}"></header>
+
+        <main class="content">
+            <div th:replace="~{fragments/layout :: flash}"></div>
+
+            <div class="breadcrumb">
+                <a th:href="@{/enrollments}">Enrollments</a>
+                <span class="breadcrumb-sep">/</span>
+                <span>New enrollment</span>
+            </div>
+
+            <div class="form-layout">
+                <form class="card form-card" th:action="@{/enrollments}" method="post" th:object="${enrollmentForm}">
+                    <div class="form-section">
+                        <h2 class="form-section-title">Enrollment details</h2>
+                        <p class="form-section-note">
+                            Choose the student and course, then enter the assessment marks. The grading service
+                            evaluates the letter grade and grade point immediately.
+                        </p>
+
+                        <div class="form-error-summary" th:if="${#fields.hasGlobalErrors()}">
+                            <strong>Please check the form:</strong>
+                            <ul>
+                                <li th:each="error : ${#fields.globalErrors()}" th:text="${error}">Error</li>
+                            </ul>
+                        </div>
+
+                        <div class="form-grid">
+                            <div class="form-field full">
+                                <label for="studentId">Student <span class="required">*</span></label>
+                                <select id="studentId" th:field="*{studentId}" th:errorclass="input-error">
+                                    <option value="">Select a student</option>
+                                    <option th:each="student : ${students}" th:value="${student.id}"
+                                            th:text="${student.fullName + ' · ' + student.rollNumber}">
+                                        Aarav Sharma · 23BCS001
+                                    </option>
+                                </select>
+                                <p class="field-error" th:if="${#fields.hasErrors('studentId')}" th:errors="*{studentId}"></p>
+                            </div>
+
+                            <div class="form-field full">
+                                <label for="courseId">Course <span class="required">*</span></label>
+                                <select id="courseId" th:field="*{courseId}" th:errorclass="input-error">
+                                    <option value="">Select a course</option>
+                                    <option th:each="course : ${courses}" th:value="${course.id}"
+                                            th:text="${course.code + ' · ' + course.title + ' (' + course.credits + ' credits)'}">
+                                        CS101 · Programming in Java (4 credits)
+                                    </option>
+                                </select>
+                                <p class="field-error" th:if="${#fields.hasErrors('courseId')}" th:errors="*{courseId}"></p>
+                            </div>
+
+                            <div class="form-field">
+                                <label for="marks">Marks (out of 100) <span class="required">*</span></label>
+                                <input id="marks" type="number" step="0.01" min="0" max="100"
+                                       th:field="*{marks}" th:errorclass="input-error" placeholder="e.g. 87.5"
+                                       data-marks-input>
+                                <p class="field-error" th:if="${#fields.hasErrors('marks')}" th:errors="*{marks}"></p>
+                            </div>
+
+                            <div class="form-field">
+                                <label>Predicted grade</label>
+                                <div class="checkbox-field" style="justify-content: space-between;">
+                                    <span data-grade-preview>Enter marks to preview</span>
+                                    <span class="badge grade-none" data-grade-badge>—</span>
+                                </div>
+                                <p class="field-hint">Final grade is confirmed by the grading service on save.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <a class="btn btn-ghost" th:href="@{/enrollments}">Cancel</a>
+                        <button class="btn btn-primary" type="submit"
+                                th:disabled="${#lists.isEmpty(students) or #lists.isEmpty(courses)}">
+                            Enroll &amp; evaluate
+                        </button>
+                    </div>
+                </form>
+
+                <aside class="stack">
+                    <div class="card aside-card">
+                        <h3>Grading service</h3>
+                        <div class="service-status" style="margin-top: 12px;">
+                            <span class="status-dot"
+                                  th:classappend="${gradingServiceOnline} ? ' online' : ' offline'"></span>
+                            <div>
+                                <strong th:text="${gradingServiceOnline ? 'Online · port 8081' : 'Offline · local fallback'}">
+                                    Online · port 8081
+                                </strong>
+                                <p th:text="${gradingServiceOnline ? 'Marks are sent to the independent REST service for evaluation.' : 'The remote service is unreachable; the same grading scale is applied locally.'}">
+                                    Marks are evaluated by the grading microservice.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card aside-card">
+                        <h3>Grading scale</h3>
+                        <ul class="scale-list">
+                            <li><span class="scale-grade">A+</span><span>90–100 · 10 points</span></li>
+                            <li><span class="scale-grade">A</span><span>85–89.99 · 9 points</span></li>
+                            <li><span class="scale-grade">B+</span><span>75–84.99 · 8 points</span></li>
+                            <li><span class="scale-grade">B</span><span>65–74.99 · 7 points</span></li>
+                            <li><span class="scale-grade">C</span><span>55–64.99 · 6 points</span></li>
+                            <li><span class="scale-grade">D</span><span>45–54.99 · 5 points</span></li>
+                            <li><span class="scale-grade">F</span><span>Below 45 · 0 points</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="card aside-card">
+                        <h3>One student, one course</h3>
+                        <p>
+                            Duplicate enrollments are blocked by a database unique constraint and a friendly
+                            validation message. Edit the existing result instead.
+                        </p>
+                    </div>
+                </aside>
+            </div>
+        </main>
+
+        <footer th:replace="~{fragments/layout :: footer}"></footer>
+    </div>
+</div>
+</body>
+</html>

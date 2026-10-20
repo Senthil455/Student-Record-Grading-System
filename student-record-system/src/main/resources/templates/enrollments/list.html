@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Enrollments')}"></head>
+<body>
+<div class="app-shell">
+    <aside th:replace="~{fragments/layout :: sidebar('enrollments')}"></aside>
+    <div th:replace="~{fragments/layout :: sidebarScrim}"></div>
+
+    <div class="main">
+        <header th:replace="~{fragments/layout :: topbar('Enrollments & grades', 'Connect students to courses and record assessment marks')}"></header>
+
+        <main class="content">
+            <div th:replace="~{fragments/layout :: flash}"></div>
+
+            <div class="stack">
+                <div class="toolbar">
+                    <div>
+                        <span class="eyebrow" style="margin-bottom: 2px;">Gradebook</span>
+                        <span class="result-count">
+                            <strong th:text="${#lists.size(enrollments)}">40</strong> enrollment(s) across the institution
+                        </span>
+                    </div>
+                    <a class="btn btn-primary" th:href="@{/enrollments/new}">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+                        New enrollment
+                    </a>
+                </div>
+
+                <div class="page-note" th:if="${!gradingServiceOnline}">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v6M12 16.5v.5"></path></svg>
+                    <span>
+                        The grading microservice is offline. Marks are still evaluated by the local fallback so
+                        you can continue working, but start the service on port 8081 to see the full REST interaction.
+                    </span>
+                </div>
+
+                <div class="card">
+                    <div class="card-head">
+                        <div>
+                            <h2 class="card-title">Gradebook</h2>
+                            <p class="card-subtitle">Select a result to correct the marks; the grade is recalculated automatically.</p>
+                        </div>
+                        <span class="query-tag" th:text="${gradingServiceOnline ? 'grading-service : 8081' : 'local fallback'}">
+                            grading-service : 8081
+                        </span>
+                    </div>
+
+                    <div class="table-wrap" th:if="${!#lists.isEmpty(enrollments)}">
+                        <table class="data-table">
+                            <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Course</th>
+                                <th>Semester</th>
+                                <th>Marks</th>
+                                <th>Grade</th>
+                                <th>Points</th>
+                                <th>Source</th>
+                                <th>Date</th>
+                                <th class="text-right">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="enrollment : ${enrollments}">
+                                <td>
+                                    <a class="person-cell" th:href="@{/students/{id}(id=${enrollment.studentId})}">
+                                        <span class="avatar" th:text="${enrollment.initials}">AS</span>
+                                        <span class="person-meta">
+                                            <strong th:text="${enrollment.studentName}">Aarav Sharma</strong>
+                                            <span th:text="${enrollment.rollNumber}">23BCS001</span>
+                                        </span>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a class="row-link" th:href="@{/courses/{id}(id=${enrollment.courseId})}">
+                                        <span class="code-tag" th:text="${enrollment.courseCode}">CS101</span>
+                                        <span th:text="${enrollment.courseTitle}">Programming in Java</span>
+                                    </a>
+                                </td>
+                                <td class="muted" th:text="${enrollment.semester}">1</td>
+                                <td><strong th:text="${#numbers.formatDecimal(enrollment.marks, 1, 1)} + '%'">92.0%</strong></td>
+                                <td><span class="badge" th:classappend="${enrollment.gradeCss}" th:text="${enrollment.grade}">A+</span></td>
+                                <td class="muted" th:text="${#numbers.formatDecimal(enrollment.gradePoint, 1, 1)}">10.0</td>
+                                <td>
+                                    <span class="badge"
+                                          th:classappend="${enrollment.gradedBy == 'grading-service'} ? ' badge-gold' : ' badge-neutral'"
+                                          th:text="${enrollment.gradedBy}">grading-service</span>
+                                </td>
+                                <td class="muted nowrap" th:text="${#temporals.format(enrollment.enrolledOn, 'dd MMM yyyy')}">01 Oct 2026</td>
+                                <td>
+                                    <div class="actions">
+                                        <a class="btn btn-ghost btn-sm" th:href="@{/enrollments/{id}/edit(id=${enrollment.id})}">Edit</a>
+                                        <form th:action="@{/enrollments/{id}/delete(id=${enrollment.id})}" method="post"
+                                              data-confirm="Remove this enrollment and its grade?">
+                                            <button class="btn btn-danger btn-sm" type="submit">Delete</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="empty-state" th:if="${#lists.isEmpty(enrollments)}">
+                        <span class="empty-state-icon">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="17" rx="2.5"></rect><path d="M8.5 2.5h7v4h-7zM8 11h8M8 15h5"></path></svg>
+                        </span>
+                        <strong>No enrollments recorded</strong>
+                        <p>Enroll a student in a course and record marks to create the first result.</p>
+                        <a class="btn btn-primary" th:href="@{/enrollments/new}">New enrollment</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer th:replace="~{fragments/layout :: footer}"></footer>
+    </div>
+</div>
+</body>
+</html>

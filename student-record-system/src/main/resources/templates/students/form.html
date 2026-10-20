@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Student form')}"></head>
+<body>
+<div class="app-shell">
+    <aside th:replace="~{fragments/layout :: sidebar('students')}"></aside>
+    <div th:replace="~{fragments/layout :: sidebarScrim}"></div>
+
+    <div class="main">
+        <header th:replace="~{fragments/layout :: topbar('Student record', 'Create or update a student profile')}"></header>
+
+        <main class="content">
+            <div th:replace="~{fragments/layout :: flash}"></div>
+
+            <div class="breadcrumb">
+                <a th:href="@{/students}">Students</a>
+                <span class="breadcrumb-sep">/</span>
+                <span th:text="${isEdit ? 'Edit record' : 'New student'}">New student</span>
+            </div>
+
+            <div class="form-layout">
+                <form class="card form-card" th:action="${isEdit ? '/students/' + studentId : '/students'}"
+                      method="post" th:object="${studentForm}">
+                    <div class="form-section">
+                        <h2 class="form-section-title" th:text="${isEdit ? 'Edit student details' : 'Add a new student'}">
+                            Add a new student
+                        </h2>
+                        <p class="form-section-note">Fields marked with <span class="required">*</span> are required.</p>
+
+                        <div class="form-error-summary" th:if="${#fields.hasGlobalErrors()}">
+                            <strong>Please check the form:</strong>
+                            <ul>
+                                <li th:each="error : ${#fields.globalErrors()}" th:text="${error}">Error</li>
+                            </ul>
+                        </div>
+
+                        <div class="form-grid">
+                            <div class="form-field">
+                                <label for="firstName">First name <span class="required">*</span></label>
+                                <input id="firstName" type="text" th:field="*{firstName}" th:errorclass="input-error"
+                                       placeholder="e.g. Aarav" maxlength="60" autocomplete="given-name">
+                                <p class="field-error" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></p>
+                            </div>
+
+                            <div class="form-field">
+                                <label for="lastName">Last name <span class="required">*</span></label>
+                                <input id="lastName" type="text" th:field="*{lastName}" th:errorclass="input-error"
+                                       placeholder="e.g. Sharma" maxlength="60" autocomplete="family-name">
+                                <p class="field-error" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></p>
+                            </div>
+
+                            <div class="form-field">
+                                <label for="email">Email address <span class="required">*</span></label>
+                                <input id="email" type="email" th:field="*{email}" th:errorclass="input-error"
+                                       placeholder="student@scholaris.edu" maxlength="120" autocomplete="email">
+                                <p class="field-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+                            </div>
+
+                            <div class="form-field">
+                                <label for="phone">Phone number</label>
+                                <input id="phone" type="tel" th:field="*{phone}" th:errorclass="input-error"
+                                       placeholder="98400 12345" maxlength="20" autocomplete="tel">
+                                <p class="field-error" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></p>
+                            </div>
+
+                            <div class="form-field">
+                                <label for="dateOfBirth">Date of birth</label>
+                                <input id="dateOfBirth" type="date" th:field="*{dateOfBirth}" th:errorclass="input-error">
+                                <p class="field-error" th:if="${#fields.hasErrors('dateOfBirth')}" th:errors="*{dateOfBirth}"></p>
+                            </div>
+
+                            <div class="form-field">
+                                <label for="active">Record status</label>
+                                <label class="checkbox-field" for="active">
+                                    <input id="active" type="checkbox" th:field="*{active}">
+                                    <span>Active student</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h2 class="form-section-title">Academic details</h2>
+                        <p class="form-section-note">Roll numbers are unique and are stored in upper case.</p>
+
+                        <div class="form-grid">
+                            <div class="form-field">
+                                <label for="rollNumber">Roll number <span class="required">*</span></label>
+                                <input id="rollNumber" type="text" th:field="*{rollNumber}" th:errorclass="input-error"
+                                       placeholder="e.g. 23BCS010" maxlength="20">
+                                <p class="field-error" th:if="${#fields.hasErrors('rollNumber')}" th:errors="*{rollNumber}"></p>
+                            </div>
+
+                            <div class="form-field">
+                                <label for="department">Department <span class="required">*</span></label>
+                                <input id="department" type="text" th:field="*{department}" th:errorclass="input-error"
+                                       list="departmentOptions" placeholder="Select or type a department" maxlength="80">
+                                <datalist id="departmentOptions">
+                                    <option th:each="department : ${departments}" th:value="${department}"></option>
+                                </datalist>
+                                <p class="field-error" th:if="${#fields.hasErrors('department')}" th:errors="*{department}"></p>
+                            </div>
+
+                            <div class="form-field">
+                                <label for="admissionYear">Admission year <span class="required">*</span></label>
+                                <input id="admissionYear" type="number" th:field="*{admissionYear}" th:errorclass="input-error"
+                                       min="2000" max="2100" step="1">
+                                <p class="field-error" th:if="${#fields.hasErrors('admissionYear')}" th:errors="*{admissionYear}"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <a class="btn btn-ghost" th:href="@{/students}">Cancel</a>
+                        <button class="btn btn-primary" type="submit"
+                                th:text="${isEdit ? 'Save changes' : 'Create student'}">Create student</button>
+                    </div>
+                </form>
+
+                <aside class="stack">
+                    <div class="card aside-card">
+                        <h3>Good records, better reports</h3>
+                        <p>
+                            A student's profile feeds directly into transcripts, GPA calculations and the
+                            department reports. Keep the roll number and department consistent with the
+                            college register.
+                        </p>
+                        <ul class="mini-list">
+                            <li><span>Unique email</span><strong>Required</strong></li>
+                            <li><span>Unique roll number</span><strong>Required</strong></li>
+                            <li><span>Transcript</span><strong>Automatic</strong></li>
+                        </ul>
+                    </div>
+
+                    <div class="card aside-card">
+                        <h3>Grading scale</h3>
+                        <p>Grades are calculated by the grading microservice when marks are recorded.</p>
+                        <ul class="scale-list">
+                            <li><span class="scale-grade">A+</span><span>90–100 · 10 points</span></li>
+                            <li><span class="scale-grade">A</span><span>85–89.99 · 9 points</span></li>
+                            <li><span class="scale-grade">B+</span><span>75–84.99 · 8 points</span></li>
+                            <li><span class="scale-grade">B</span><span>65–74.99 · 7 points</span></li>
+                            <li><span class="scale-grade">C</span><span>55–64.99 · 6 points</span></li>
+                            <li><span class="scale-grade">D</span><span>45–54.99 · 5 points</span></li>
+                            <li><span class="scale-grade">F</span><span>Below 45 · 0 points</span></li>
+                        </ul>
+                    </div>
+                </aside>
+            </div>
+        </main>
+
+        <footer th:replace="~{fragments/layout :: footer}"></footer>
+    </div>
+</div>
+</body>
+</html>
