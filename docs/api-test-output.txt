@@ -1,0 +1,792 @@
+# API test transcript
+
+Real requests executed against the running application on **20 October 2026**.
+Main application: `http://localhost:8080` · Grading service: `http://localhost:8081`.
+The transcript below is generated directly from `curl`; the Postman/Newman run at
+the end executes the same collection (34 requests, 59 assertions, 0 failures).
+
+
+## Dashboard summary
+
+```bash
+curl -sS -X GET http://localhost:8080/api/reports/summary
+```
+
+HTTP **200**
+
+```json
+{
+  "students": 9,
+  "activeStudents": 9,
+  "courses": 6,
+  "enrollments": 40,
+  "gradedEnrollments": 40,
+  "overallAverage": 78.7
+}
+```
+
+## List students
+
+```bash
+curl -sS -X GET http://localhost:8080/api/students
+```
+
+HTTP **200**
+
+```json
+[
+  {
+    "id": 5,
+    "rollNumber": "23BCS001",
+    "firstName": "Aarav",
+    "lastName": "Sharma",
+    "email": "aarav.sharma@student.scholaris.edu",
+    "phone": null,
+    "dateOfBirth": "2005-04-12",
+    "department": "B.Sc Computer Science",
+    "admissionYear": 2023,
+    "active": true,
+    "courseCount": 5,
+    "averageMarks": 89.0,
+    "gpa": 9.41,
+    "fullName": "Aarav Sharma",
+    "initials": "AS"
+  },
+  {
+    "id": 6,
+    "rollNumber": "23BCS002",
+    "firstName": "Diya",
+    "lastName": "Patel",
+    "email": "diya.patel@student.scholaris.edu",
+    "phone": null,
+    "dateOfBirth": "2005-08-03",
+    "department": "B.Sc Computer Science",
+    "admissionYear": 2023,
+    "active": true,
+    "courseCount": 5,
+    "averageMarks": 83.0,
+    "gpa": 8.35,
+    "fullName": "Diya Patel",
+    "initials": "DP"
+  },
+  {
+    "id": 7,
+    "rollNumber": "23BCS003",
+    "firstName": "Ishaan",
+    "lastName": "Reddy",
+    "email": "ishaan.reddy@student.scholaris.edu",
+    "phone": null,
+    "dateOfBirth": "2004-12-21",
+    "department": "B.Sc Computer Science",
+    "admissionYear": 2023,
+    "active": true,
+    "courseCount": 5,
+    "averageMarks": 70.0,
+    "gpa": 7.18,
+    "fullName": "Ishaan Reddy",
+    "initials": "IR"
+  },
+  {
+    "id": 8,
+    "rollNumber": "23BCS004",
+    "firstName": "Ananya",
+    "lastName": "Iyer",
+    "email": "ananya.iyer@student.scholaris.edu",
+    "phone": null,
+    "dateOfBirth": "2005-02-17",
+    "department": "B.Sc Computer Science",
+    "admissionYear": 2023,
+    "active": true,
+    "courseCount": 5,
+    "averageMarks": 93.8,
+    "gpa": 10.0,
+    "fullName": "Ananya Iyer",
+    "initials": "AI"
+  },
+  {
+    "id": 9,
+    "rollNumber": "23BCS005",
+    "firstName": "Vihaan",
+    "lastName": "Gupta",
+    "email": "vihaan.gupta@student.scholaris.edu",
+    "phone": null,
+    "dateOfBirth": "2004-10-09",
+    "department": "B.Sc Computer Science",
+    "admissionYear": 2023,
+    "active": true,
+    "courseCount": 5,
+    "averageMarks": 58.4,
+    "gpa": 6.0,
+    "fullName": "Vihaan Gupta",
+    "initials": "VG"
+  },
+  {
+    "id": 10,
+    "rollNumber": "23BCS006",
+    "firstName": "Kavya",
+    "lastName": "Menon",
+    "email": "kavya.menon@student.scholaris.edu",
+    "phone": null,
+    "dateOfBirth": "2005-06-28",
+    "department": "BCA",
+    "admissionYear": 2023,
+    "active": true,
+    "courseCount": 5,
+    "averageMarks": 86.4,
+    "gpa": 8.94,
+    "fullName": "Kavya Menon",
+    "initials": "KM"
+  },
+  {
+    "id": 11,
+    "rollNumber": "23BCS007",
+    "firstName": "Arjun",
+    "lastName": "Nair",
+    "email": "arjun.nair@student.scholaris.edu",
+    "phone": null,
+    "dateOfBirth": "2005-01-15",
+    "department": "BCA",
+    "admissionYear": 2023,
+    "active": true,
+    "courseCount": 5,
+    "averageMarks": 68.8,
+    "gpa": 7.0,
+    "fullName": "Arjun Nair",
+    "initials": "AN"
+  },
+  {
+    "id": 12,
+    "rollNumber": "23BCS008",
+    "firstName": "Sneha",
+    "lastName": "Kulkarni",
+    "email": "sneha.kulkarni@student.scholaris.edu",
+    "phone": null,
+    "dateOfBirth": "2005-09-07",
+    "department": "BCA",
+    "admissionYear": 2023,
+    "active": true,
+    "courseCount": 5,
+    "averageMarks": 80.2,
+    "gpa": 8.24,
+    "fullName": "Sneha Kulkarni",
+    "initials": "SK"
+  },
+  {
+    "id": 13,
+    "rollNumber": "23BCS009",
+    "firstName": "Rohan",
+    "lastName": "Das",
+    "email": "rohan.das@student.scholaris.edu",
+    "phone": null,
+    "dateOfBirth": "2006-03-30",
+    "department": "B.Sc Computer Science",
+    "admissionYear": 2024,
+    "active": true,
+    "courseCount": 0,
+    "averageMarks": null,
+    "gpa": null,
+    "fullName": "Rohan Das",
+    "initials": "RD"
+  }
+]
+```
+
+## Student transcript (GET /api/students/8/transcript)
+
+```bash
+curl -sS -X GET http://localhost:8080/api/students/8/transcript
+```
+
+HTTP **200**
+
+```json
+{
+  "student": {
+    "id": 8,
+    "rollNumber": "23BCS004",
+    "firstName": "Ananya",
+    "lastName": "Iyer",
+    "email": "ananya.iyer@student.scholaris.edu",
+    "phone": null,
+    "dateOfBirth": "2005-02-17",
+    "department": "B.Sc Computer Science",
+    "admissionYear": 2023,
+    "active": true,
+    "courseCount": 5,
+    "averageMarks": 93.8,
+    "gpa": 10.0,
+    "fullName": "Ananya Iyer",
+    "initials": "AI"
+  },
+  "enrollments": [
+    {
+      "id": 16,
+      "studentId": 8,
+      "studentName": "Ananya Iyer",
+      "rollNumber": "23BCS004",
+      "courseId": 1,
+      "courseCode": "CS101",
+      "courseTitle": "Programming in Java",
+      "credits": 4,
+      "semester": 1,
+      "marks": 95.0,
+      "grade": "A+",
+      "gradePoint": 10.0,
+      "enrolledOn": "2026-10-04",
+      "gradedBy": "seed-data",
+      "initials": "AI",
+      "passed": true,
+      "gradeCss": "grade-a"
+    },
+    {
+      "id": 17,
+      "studentId": 8,
+      "studentName": "Ananya Iyer",
+      "rollNumber": "23BCS004",
+      "courseId": 2,
+      "courseCode": "CS102",
+      "courseTitle": "Data Structures",
+      "credits": 4,
+      "semester": 3,
+      "marks": 91.0,
+      "grade": "A+",
+      "gradePoint": 10.0,
+      "enrolledOn": "2026-10-03",
+      "gradedBy": "seed-data",
+      "initials": "AI",
+      "passed": true,
+      "gradeCss": "grade-a"
+    },
+    {
+      "id": 18,
+      "studentId": 8,
+      "studentName": "Ananya Iyer",
+      "rollNumber": "23BCS004",
+      "courseId": 3,
+      "courseCode": "CS201",
+      "courseTitle": "Database Management Systems",
+      "credits": 3,
+      "semester": 3,
+      "marks": 93.0,
+      "grade": "A+",
+      "gradePoint": 10.0,
+      "enrolledOn": "2026-10-02",
+      "gradedBy": "seed-data",
+      "initials": "AI",
+      "passed": true,
+      "gradeCss": "grade-a"
+    },
+    {
+      "id": 19,
+      "studentId": 8,
+      "studentName": "Ananya Iyer",
+      "rollNumber": "23BCS004",
+      "courseId": 4,
+      "courseCode": "CS202",
+      "courseTitle": "Web Programming",
+      "credits": 3,
+      "semester": 5,
+      "marks": 96.0,
+      "grade": "A+",
+      "gradePoint": 10.0,
+      "enrolledOn": "2026-10-01",
+      "gradedBy": "seed-data",
+      "initials": "AI",
+      "passed": true,
+      "gradeCss": "grade-a"
+    },
+    {
+      "id": 20,
+      "studentId": 8,
+      "studentName": "Ananya Iyer",
+      "rollNumber": "23BCS004",
+      "courseId": 6,
+      "courseCode": "CS301",
+      "courseTitle": "Software Engineering",
+      "credits": 3,
+      "semester": 5,
+      "marks": 94.0,
+      "grade": "A+",
+      "gradePoint": 10.0,
+      "enrolledOn": "2026-09-30",
+      "gradedBy": "seed-data",
+      "initials": "AI",
+      "passed": true,
+      "gradeCss": "grade-a"
+    }
+  ],
+  "totalCredits": 17.0,
+  "gradedCourses": 5,
+  "passedCourses": 5,
+  "gpa": 10.0
+}
+```
+
+## Create student (POST)
+
+```bash
+curl -sS -X POST http://localhost:8080/api/students \
+  -H 'Content-Type: application/json' \
+  -d '{"firstName": "Nila", "lastName": "Sundar", "email": "nila.491718@student.scholaris.edu", "phone": "9840012399", "dateOfBirth": "2005-11-02", "rollNumber": "TEST491718", "department": "B.Sc Computer Science", "admissionYear": 2023, "active": true}'
+```
+
+HTTP **201**
+
+```json
+{
+  "id": 34,
+  "rollNumber": "TEST491718",
+  "firstName": "Nila",
+  "lastName": "Sundar",
+  "email": "nila.491718@student.scholaris.edu",
+  "phone": "9840012399",
+  "dateOfBirth": "2005-11-02",
+  "department": "B.Sc Computer Science",
+  "admissionYear": 2023,
+  "active": true,
+  "courseCount": 0,
+  "averageMarks": null,
+  "gpa": null,
+  "fullName": "Nila Sundar",
+  "initials": "NS"
+}
+```
+
+## Update student (PUT)
+
+```bash
+curl -sS -X PUT http://localhost:8080/api/students/34 \
+  -H 'Content-Type: application/json' \
+  -d '{"firstName": "Nila", "lastName": "Sundar", "email": "nila.491718@student.scholaris.edu", "rollNumber": "TEST491718", "department": "BCA", "admissionYear": 2023, "active": true}'
+```
+
+HTTP **200**
+
+```json
+{
+  "id": 34,
+  "rollNumber": "TEST491718",
+  "firstName": "Nila",
+  "lastName": "Sundar",
+  "email": "nila.491718@student.scholaris.edu",
+  "phone": null,
+  "dateOfBirth": null,
+  "department": "BCA",
+  "admissionYear": 2023,
+  "active": true,
+  "courseCount": 0,
+  "averageMarks": null,
+  "gpa": null,
+  "fullName": "Nila Sundar",
+  "initials": "NS"
+}
+```
+
+## Enroll the new student (POST /api/enrollments)
+
+```bash
+curl -sS -X POST http://localhost:8080/api/enrollments \
+  -H 'Content-Type: application/json' \
+  -d '{"studentId": 34, "courseId": 5, "marks": 82.5}'
+```
+
+HTTP **201**
+
+```json
+{
+  "id": 66,
+  "studentId": 34,
+  "studentName": "Nila Sundar",
+  "rollNumber": "TEST491718",
+  "courseId": 5,
+  "courseCode": "MA101",
+  "courseTitle": "Discrete Mathematics",
+  "credits": 3,
+  "semester": 1,
+  "marks": 82.5,
+  "grade": "B+",
+  "gradePoint": 8.0,
+  "enrolledOn": "2026-10-20",
+  "gradedBy": "grading-service",
+  "initials": "NS",
+  "passed": true,
+  "gradeCss": "grade-b"
+}
+```
+
+## Correct marks (PUT)
+
+```bash
+curl -sS -X PUT http://localhost:8080/api/enrollments/66 \
+  -H 'Content-Type: application/json' \
+  -d '{"marks": 91}'
+```
+
+HTTP **200**
+
+```json
+{
+  "id": 66,
+  "studentId": 34,
+  "studentName": "Nila Sundar",
+  "rollNumber": "TEST491718",
+  "courseId": 5,
+  "courseCode": "MA101",
+  "courseTitle": "Discrete Mathematics",
+  "credits": 3,
+  "semester": 1,
+  "marks": 91.0,
+  "grade": "A+",
+  "gradePoint": 10.0,
+  "enrolledOn": "2026-10-20",
+  "gradedBy": "grading-service",
+  "initials": "NS",
+  "passed": true,
+  "gradeCss": "grade-a"
+}
+```
+
+## Delete test enrollment
+
+```bash
+curl -sS -X DELETE http://localhost:8080/api/enrollments/66
+```
+
+HTTP **204**
+
+```json
+
+```
+
+## Delete test student
+
+```bash
+curl -sS -X DELETE http://localhost:8080/api/students/34
+```
+
+HTTP **204**
+
+```json
+
+```
+
+## Validation failure (empty student)
+
+```bash
+curl -sS -X POST http://localhost:8080/api/students \
+  -H 'Content-Type: application/json' \
+  -d '{}'
+```
+
+HTTP **400**
+
+```json
+{
+  "status": 400,
+  "error": "Validation failed",
+  "message": "One or more request fields are invalid.",
+  "path": "/api/students",
+  "fieldErrors": {
+    "lastName": "Last name is required.",
+    "firstName": "First name is required.",
+    "rollNumber": "Roll number is required.",
+    "admissionYear": "Admission year is required.",
+    "department": "Department is required.",
+    "email": "Email is required."
+  },
+  "timestamp": "2026-10-20T10:21:59.142657412Z"
+}
+```
+
+## Duplicate student conflict
+
+```bash
+curl -sS -X POST http://localhost:8080/api/students \
+  -H 'Content-Type: application/json' \
+  -d '{"firstName": "Aarav", "lastName": "Sharma", "email": "aarav.sharma@student.scholaris.edu", "rollNumber": "23BCS001", "department": "B.Sc Computer Science", "admissionYear": 2023, "active": true}'
+```
+
+HTTP **409**
+
+```json
+{
+  "status": 409,
+  "error": "Conflict",
+  "message": "A student with email aarav.sharma@student.scholaris.edu already exists.",
+  "path": "/api/students",
+  "timestamp": "2026-10-20T10:21:59.170160900Z"
+}
+```
+
+## Missing student (404)
+
+```bash
+curl -sS -X GET http://localhost:8080/api/students/999999
+```
+
+HTTP **404**
+
+```json
+{
+  "status": 404,
+  "error": "Not found",
+  "message": "Student with ID 999999 was not found.",
+  "path": "/api/students/999999",
+  "timestamp": "2026-10-20T10:21:59.201175458Z"
+}
+```
+
+## Course performance (HQL)
+
+```bash
+curl -sS -X GET http://localhost:8080/api/reports/course-performance
+```
+
+HTTP **200**
+
+```json
+[
+  {
+    "code": "CS301",
+    "title": "Software Engineering",
+    "averageMarks": 86.5,
+    "enrollmentCount": 4,
+    "highestMarks": 94.0,
+    "lowestMarks": 76.0
+  },
+  {
+    "code": "CS202",
+    "title": "Web Programming",
+    "averageMarks": 80.25,
+    "enrollmentCount": 8,
+    "highestMarks": 96.0,
+    "lowestMarks": 60.0
+  },
+  {
+    "code": "CS201",
+    "title": "Database Management Systems",
+    "averageMarks": 79.25,
+    "enrollmentCount": 8,
+    "highestMarks": 93.0,
+    "lowestMarks": 55.0
+  },
+  {
+    "code": "CS101",
+    "title": "Programming in Java",
+    "averageMarks": 79.0,
+    "enrollmentCount": 8,
+    "highestMarks": 95.0,
+    "lowestMarks": 58.0
+  },
+  {
+    "code": "CS102",
+    "title": "Data Structures",
+    "averageMarks": 78.13,
+    "enrollmentCount": 8,
+    "highestMarks": 91.0,
+    "lowestMarks": 62.0
+  },
+  {
+    "code": "MA101",
+    "title": "Discrete Mathematics",
+    "averageMarks": 67.25,
+    "enrollmentCount": 4,
+    "highestMarks": 78.0,
+    "lowestMarks": 57.0
+  }
+]
+```
+
+## SessionFactory diagnostics
+
+```bash
+curl -sS -X GET http://localhost:8080/api/diagnostics/session-factory
+```
+
+HTTP **200**
+
+```json
+{
+  "hibernateVersion": "6.6.53.Final",
+  "sessionFactoryClass": "jdk.proxy2.$Proxy156",
+  "sessionFactoryOpen": true,
+  "entityCount": 5,
+  "entityNames": [
+    "Course",
+    "Enrollment",
+    "Instructor",
+    "Person",
+    "Student"
+  ],
+  "jdbcUrl": "configured by Spring Boot",
+  "dialect": "auto-detected"
+}
+```
+
+## Explicit Hibernate Session + Transaction
+
+```bash
+curl -sS -X GET http://localhost:8080/api/diagnostics/hibernate/top-performers?minimumAverage=80
+```
+
+HTTP **200**
+
+```json
+[
+  {
+    "rollNumber": "23BCS004",
+    "studentName": "Ananya Iyer",
+    "averageMarks": 93.8
+  },
+  {
+    "rollNumber": "23BCS001",
+    "studentName": "Aarav Sharma",
+    "averageMarks": 89.0
+  },
+  {
+    "rollNumber": "23BCS006",
+    "studentName": "Kavya Menon",
+    "averageMarks": 86.4
+  },
+  {
+    "rollNumber": "23BCS002",
+    "studentName": "Diya Patel",
+    "averageMarks": 83.0
+  },
+  {
+    "rollNumber": "23BCS008",
+    "studentName": "Sneha Kulkarni",
+    "averageMarks": 80.2
+  }
+]
+```
+
+## Grading service — health
+
+```bash
+curl -sS -X GET http://localhost:8081/api/grade/health
+```
+
+HTTP **200**
+
+```json
+{
+  "status": "UP",
+  "service": "grading-service",
+  "port": 8081
+}
+```
+
+## Grading service — evaluate 92
+
+```bash
+curl -sS -X POST http://localhost:8081/api/grade/evaluate \
+  -H 'Content-Type: application/json' \
+  -d '{"marks": 92}'
+```
+
+HTTP **200**
+
+```json
+{
+  "marks": 92.0,
+  "grade": "A+",
+  "gradePoint": 10.0,
+  "passed": true,
+  "evaluatedBy": "grading-service",
+  "evaluatedAt": "2026-10-20T10:21:59.308446461Z"
+}
+```
+
+## Grading service — invalid marks
+
+```bash
+curl -sS -X POST http://localhost:8081/api/grade/evaluate \
+  -H 'Content-Type: application/json' \
+  -d '{"marks": 150}'
+```
+
+HTTP **400**
+
+```json
+{
+  "timestamp": "2026-10-20T10:21:59.331070716Z",
+  "status": 400,
+  "error": "Validation failed",
+  "message": "One or more request fields are invalid.",
+  "path": "/api/grade/evaluate",
+  "fieldErrors": {
+    "marks": "Marks cannot be above 100."
+  }
+}
+```
+
+## Grading service — GPA
+
+```bash
+curl -sS -X POST http://localhost:8081/api/grade/gpa \
+  -H 'Content-Type: application/json' \
+  -d '{"gradePoints": [10, 9, 8], "credits": [4, 4, 3]}'
+```
+
+HTTP **200**
+
+```json
+{
+  "gpa": 9.09,
+  "totalCredits": 11,
+  "courses": 3,
+  "evaluatedBy": "grading-service",
+  "evaluatedAt": "2026-10-20T10:21:59.351562267Z"
+}
+```
+
+## Reset verification (summary after cleanup)
+
+```bash
+curl -sS -X GET http://localhost:8080/api/reports/summary
+```
+
+HTTP **200**
+
+```json
+{
+  "students": 9,
+  "activeStudents": 9,
+  "courses": 6,
+  "enrollments": 40,
+  "gradedEnrollments": 40,
+  "overallAverage": 78.7
+}
+```
+
+---
+
+## Postman / Newman collection run
+
+The collection `postman/Scholaris.postman_collection.json` was executed with the
+`Scholaris Local` environment using Newman (Postman's CLI runner).
+
+```text
+┌─────────────────────────┬───────────────────┬──────────────────┐
+│                         │          executed │           failed │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│              iterations │                 1 │                0 │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│                requests │                34 │                0 │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│            test-scripts │                34 │                0 │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│      prerequest-scripts │                34 │                0 │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│              assertions │                59 │                0 │
+├─────────────────────────┴───────────────────┴──────────────────┤
+│ total run duration: 2.3s                                       │
+│ total data received: 31.29kB (approx)                          │
+│ average response time: 44ms [min: 7ms, max: 245ms, s.d.: 61ms] │
+└────────────────────────────────────────────────────────────────┘
+```
+
+The run covers every folder: Students, Courses, Enrollments, Reports, Hibernate
+diagnostics and the grading microservice. It also verifies `400`, `404` and `409`
+error contracts.
