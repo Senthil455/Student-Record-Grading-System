@@ -1,0 +1,16 @@
+# Build output
+**/target/
+**/data/
+
+# Version control and IDE files
+.git/
+.idea/
+.vscode/
+*.iml
+
+# Local artefacts
+docs/screenshots/
+docs/*.pdf
+docs/*.pptx
+*.log
+.DS_Store

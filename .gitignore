@@ -1,0 +1,34 @@
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+.settings/
+.classpath
+.project
+.factorypath
+.sts4-cache/
+.springBeans
+apt_generated/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Runtime data
+data/
+*.mv.db
+*.trace.db
+*.log
+logs/
+
+# Build output
+*.jar
+*.war
+!**/.mvn/wrapper/maven-wrapper.jar
+
+# Local environment
+.env
+application-local.properties
