@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="900" viewBox="0 0 1500 900" font-family="'DejaVu Sans', Arial, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0,0 L12,6 L0,12 z" fill="#1f2a44"/>
+    </marker>
+    <marker id="arrowGold" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0,0 L12,6 L0,12 z" fill="#b58a1b"/>
+    </marker>
+    <marker id="arrowRed" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0,0 L12,6 L0,12 z" fill="#a33a2b"/>
+    </marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#1f2a44" flood-opacity="0.14"/>
+    </filter>
+  </defs>
+
+  <rect width="1500" height="900" fill="#f7f4ec"/>
+  <text x="60" y="54" font-size="31" font-weight="700" fill="#1f2a44">Recording a grade — request flow</text>
+  <text x="60" y="82" font-size="15" fill="#5f6b7a">MVC form submission, AOP logging, REST call to the grading microservice and transactional persistence</text>
+  <line x1="60" y1="96" x2="1440" y2="96" stroke="#d9d2c0" stroke-width="1.5"/>
+
+  <!-- Participants -->
+  <g filter="url(#shadow)">
+    <rect x="30" y="120" width="165" height="56" rx="9" fill="#ffffff" stroke="#1f2a44"/>
+    <rect x="225" y="120" width="195" height="56" rx="9" fill="#ffffff" stroke="#1f2a44"/>
+    <rect x="455" y="120" width="185" height="56" rx="9" fill="#ffffff" stroke="#1f2a44"/>
+    <rect x="675" y="120" width="175" height="56" rx="9" fill="#ffffff" stroke="#1f2a44"/>
+    <rect x="885" y="120" width="185" height="56" rx="9" fill="#e8b93f" stroke="#8a6a12"/>
+    <rect x="1105" y="120" width="175" height="56" rx="9" fill="#ffffff" stroke="#1f2a44"/>
+    <rect x="1315" y="120" width="155" height="56" rx="9" fill="#ffffff" stroke="#1f2a44"/>
+  </g>
+  <text x="112" y="146" font-size="13.5" font-weight="700" fill="#1f2a44" text-anchor="middle">User</text>
+  <text x="112" y="164" font-size="11" fill="#5f6b7a" text-anchor="middle">browser form</text>
+  <text x="322" y="146" font-size="13.5" font-weight="700" fill="#1f2a44" text-anchor="middle">EnrollmentController</text>
+  <text x="322" y="164" font-size="11" fill="#5f6b7a" text-anchor="middle">Spring MVC</text>
+  <text x="547" y="146" font-size="13.5" font-weight="700" fill="#1f2a44" text-anchor="middle">EnrollmentService</text>
+  <text x="547" y="164" font-size="11" fill="#5f6b7a" text-anchor="middle">@Transactional · AOP proxy</text>
+  <text x="762" y="146" font-size="13.5" font-weight="700" fill="#1f2a44" text-anchor="middle">GradingClient</text>
+  <text x="762" y="164" font-size="11" fill="#5f6b7a" text-anchor="middle">RestClient</text>
+  <text x="977" y="146" font-size="13.5" font-weight="700" fill="#5c470a" text-anchor="middle">grading-service</text>
+  <text x="977" y="164" font-size="11" fill="#5c470a" text-anchor="middle">port 8081</text>
+  <text x="1192" y="146" font-size="13.5" font-weight="700" fill="#1f2a44" text-anchor="middle">EnrollmentRepository</text>
+  <text x="1192" y="164" font-size="11" fill="#5f6b7a" text-anchor="middle">Spring Data JPA</text>
+  <text x="1392" y="146" font-size="13.5" font-weight="700" fill="#1f2a44" text-anchor="middle">Database</text>
+  <text x="1392" y="164" font-size="11" fill="#5f6b7a" text-anchor="middle">H2 / MySQL</text>
+
+  <!-- Lifelines -->
+  <g stroke="#9aa6b8" stroke-width="1.3" stroke-dasharray="6 6">
+    <line x1="112" y1="176" x2="112" y2="760"/>
+    <line x1="322" y1="176" x2="322" y2="760"/>
+    <line x1="547" y1="176" x2="547" y2="760"/>
+    <line x1="762" y1="176" x2="762" y2="760"/>
+    <line x1="977" y1="176" x2="977" y2="760"/>
+    <line x1="1192" y1="176" x2="1192" y2="760"/>
+    <line x1="1392" y1="176" x2="1392" y2="760"/>
+  </g>
+
+  <!-- Activation bars -->
+  <g fill="#dde4ef">
+    <rect x="316" y="208" width="12" height="486" rx="3"/>
+    <rect x="541" y="253" width="12" height="380" rx="3"/>
+    <rect x="756" y="292" width="12" height="124" rx="3"/>
+    <rect x="971" y="337" width="12" height="78" rx="3"/>
+    <rect x="1186" y="472" width="12" height="120" rx="3"/>
+    <rect x="1386" y="507" width="12" height="70" rx="3"/>
+  </g>
+
+  <!-- 1. User -> Controller -->
+  <line x1="118" y1="218" x2="312" y2="218" stroke="#1f2a44" stroke-width="2.2" marker-end="url(#arrow)"/>
+  <rect x="120" y="197" width="305" height="18" fill="#f7f4ec"/>
+  <text x="126" y="210" font-size="12.5" fill="#1f2a44">POST /enrollments · studentId, courseId, marks</text>
+
+  <!-- 2. Controller -> Service -->
+  <line x1="328" y1="262" x2="537" y2="262" stroke="#1f2a44" stroke-width="2.2" marker-end="url(#arrow)"/>
+  <text x="336" y="254" font-size="12.5" fill="#1f2a44">create(EnrollmentForm)</text>
+  <rect x="365" y="272" width="215" height="24" rx="5" fill="#f1ead6" stroke="#d9c98f"/>
+  <text x="377" y="288" font-size="10.5" fill="#8a6a12">AOP @Around logs method + duration</text>
+
+  <!-- 3. Service -> GradingClient -->
+  <line x1="553" y1="322" x2="752" y2="322" stroke="#1f2a44" stroke-width="2.2" marker-end="url(#arrow)"/>
+  <text x="561" y="314" font-size="12.5" fill="#1f2a44">evaluate(marks)</text>
+
+  <!-- 4. GradingClient -> Grading service -->
+  <line x1="768" y1="366" x2="967" y2="366" stroke="#b58a1b" stroke-width="2.2" marker-end="url(#arrowGold)"/>
+  <text x="776" y="358" font-size="12.5" fill="#8a6a12">POST /api/grade/evaluate</text>
+  <text x="776" y="376" font-size="10.5" fill="#8a6a12">{ "marks": 92.0 }</text>
+
+  <!-- 5. Grading service -> client -->
+  <line x1="971" y1="404" x2="772" y2="404" stroke="#b58a1b" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrowGold)"/>
+  <rect x="775" y="407" width="455" height="18" fill="#f7f4ec"/>
+  <text x="780" y="420" font-size="11.5" fill="#8a6a12">200 OK · { grade: "A+", gradePoint: 10.0, passed: true }</text>
+
+  <!-- 6. fallback note -->
+  <path d="M756 444 C720 444 720 462 750 462" fill="none" stroke="#a33a2b" stroke-width="1.8" stroke-dasharray="5 4" marker-end="url(#arrowRed)"/>
+  <rect x="780" y="436" width="400" height="40" rx="5" fill="#fdf6f3" stroke="#e3b8b0"/>
+  <text x="786" y="452" font-size="11" fill="#a33a2b">RestClientException → LocalGradeCalculator fallback</text>
+  <text x="786" y="468" font-size="10.5" fill="#a33a2b">graded_by = "local-fallback" (request still succeeds)</text>
+
+  <!-- 7. Service -> Repository -->
+  <line x1="553" y1="500" x2="1182" y2="500" stroke="#1f2a44" stroke-width="2.2" marker-end="url(#arrow)"/>
+  <text x="561" y="492" font-size="12.5" fill="#1f2a44">save(enrollment) · marks, grade, gradePoint, semester, enrolledOn</text>
+
+  <!-- 8. Repository -> DB -->
+  <line x1="1198" y1="534" x2="1382" y2="534" stroke="#1f2a44" stroke-width="2.2" marker-end="url(#arrow)"/>
+  <text x="1206" y="526" font-size="12.5" fill="#1f2a44">INSERT INTO enrollments</text>
+
+  <!-- 9. DB -> Repository -->
+  <line x1="1386" y1="568" x2="1202" y2="568" stroke="#1f2a44" stroke-width="1.8" stroke-dasharray="7 5" marker-end="url(#arrow)"/>
+  <text x="1210" y="584" font-size="11.5" fill="#5f6b7a">generated identity id</text>
+
+  <!-- 10. Repository -> Service -->
+  <line x1="1186" y1="606" x2="559" y2="606" stroke="#1f2a44" stroke-width="1.8" stroke-dasharray="7 5" marker-end="url(#arrow)"/>
+  <text x="567" y="598" font-size="11.5" fill="#5f6b7a">managed Enrollment entity</text>
+
+  <!-- 11. Service -> Controller -->
+  <line x1="541" y1="650" x2="334" y2="650" stroke="#1f2a44" stroke-width="1.8" stroke-dasharray="7 5" marker-end="url(#arrow)"/>
+  <text x="342" y="642" font-size="11.5" fill="#5f6b7a">EnrollmentView + "Grade saved" flash</text>
+
+  <!-- 12. Controller -> User -->
+  <line x1="316" y1="700" x2="118" y2="700" stroke="#1f2a44" stroke-width="1.8" stroke-dasharray="7 5" marker-end="url(#arrow)"/>
+  <text x="126" y="692" font-size="11.5" fill="#5f6b7a">302 redirect → /enrollments</text>
+
+  <!-- Transaction boundary -->
+  <rect x="470" y="250" width="330" height="500" rx="10" fill="none" stroke="#b58a1b" stroke-width="1.4" stroke-dasharray="8 6" opacity="0.65"/>
+  <text x="478" y="742" font-size="10.5" fill="#8a6a12">@Transactional boundary</text>
+
+  <!-- Footer notes -->
+  <rect x="60" y="780" width="650" height="88" rx="10" fill="#ffffff" stroke="#d9d2c0"/>
+  <text x="78" y="805" font-size="13" font-weight="700" fill="#1f2a44">What the sequence demonstrates</text>
+  <text x="78" y="826" font-size="11.5" fill="#5f6b7a">• MVC controller binds and validates the form; the service owns the business transaction.</text>
+  <text x="78" y="845" font-size="11.5" fill="#5f6b7a">• AOP wraps the service call; grading rules are delegated to an independent REST service.</text>
+  <text x="78" y="864" font-size="11.5" fill="#5f6b7a">• Hibernate persists the enrollment and returns the database-generated identity value.</text>
+
+  <rect x="740" y="780" width="700" height="88" rx="10" fill="#ffffff" stroke="#d9d2c0"/>
+  <text x="758" y="805" font-size="13" font-weight="700" fill="#1f2a44">Failure path</text>
+  <text x="758" y="826" font-size="11.5" fill="#5f6b7a">If port 8081 is down or returns an error, the client logs a warning and computes the grade locally.</text>
+  <text x="758" y="845" font-size="11.5" fill="#5f6b7a">The enrollment is still saved; the “Service health” card shows “Local fallback active”.</text>
+  <text x="758" y="864" font-size="11.5" fill="#8a6a12">This is a simple resilience pattern, not a replacement for a full circuit breaker.</text>
+</svg>

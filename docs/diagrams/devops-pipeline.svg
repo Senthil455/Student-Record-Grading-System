@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="500" viewBox="0 0 1500 500" font-family="'DejaVu Sans', Arial, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0,0 L12,6 L0,12 z" fill="#1f2a44"/>
+    </marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#1f2a44" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+  <rect width="1500" height="500" fill="#f7f4ec"/>
+  <text x="60" y="52" font-size="31" font-weight="700" fill="#1f2a44">DevOps delivery pipeline</text>
+  <text x="60" y="80" font-size="15" fill="#5f6b7a">From a local commit to two running Spring Boot services</text>
+  <line x1="60" y1="94" x2="1440" y2="94" stroke="#d9d2c0" stroke-width="1.5"/>
+
+  <!-- Stage labels -->
+  <text x="95" y="140" font-size="10.5" font-weight="700" fill="#b58a1b" letter-spacing="1.2">DEVELOP</text>
+  <text x="290" y="140" font-size="10.5" font-weight="700" fill="#b58a1b" letter-spacing="1.2">VERSION</text>
+  <text x="485" y="140" font-size="10.5" font-weight="700" fill="#b58a1b" letter-spacing="1.2">COLLABORATE</text>
+  <text x="690" y="140" font-size="10.5" font-weight="700" fill="#b58a1b" letter-spacing="1.2">INTEGRATE</text>
+  <text x="905" y="140" font-size="10.5" font-weight="700" fill="#b58a1b" letter-spacing="1.2">VERIFY</text>
+  <text x="1100" y="140" font-size="10.5" font-weight="700" fill="#b58a1b" letter-spacing="1.2">PACKAGE</text>
+  <text x="1285" y="140" font-size="10.5" font-weight="700" fill="#b58a1b" letter-spacing="1.2">RELEASE</text>
+
+  <!-- Boxes -->
+  <g filter="url(#shadow)">
+    <rect x="55" y="160" width="175" height="150" rx="12" fill="#ffffff" stroke="#1f2a44"/>
+    <rect x="255" y="160" width="175" height="150" rx="12" fill="#ffffff" stroke="#1f2a44"/>
+    <rect x="455" y="160" width="175" height="150" rx="12" fill="#ffffff" stroke="#1f2a44"/>
+    <rect x="655" y="160" width="175" height="150" rx="12" fill="#ffffff" stroke="#1f2a44"/>
+    <rect x="855" y="160" width="175" height="150" rx="12" fill="#ffffff" stroke="#1f2a44"/>
+    <rect x="1055" y="160" width="175" height="150" rx="12" fill="#ffffff" stroke="#1f2a44"/>
+    <rect x="1255" y="160" width="185" height="150" rx="12" fill="#1f2a44"/>
+  </g>
+
+  <text x="142" y="196" font-size="14.5" font-weight="700" fill="#1f2a44" text-anchor="middle">Developer</text>
+  <text x="142" y="220" font-size="11.5" fill="#5f6b7a" text-anchor="middle">IntelliJ / VS Code</text>
+  <text x="142" y="238" font-size="11.5" fill="#5f6b7a" text-anchor="middle">Maven Wrapper</text>
+  <text x="142" y="256" font-size="11.5" fill="#5f6b7a" text-anchor="middle">./mvnw spring-boot:run</text>
+  <text x="142" y="282" font-size="11" fill="#8a6a12" text-anchor="middle">feature branch + commit</text>
+
+  <text x="342" y="196" font-size="14.5" font-weight="700" fill="#1f2a44" text-anchor="middle">Git</text>
+  <text x="342" y="220" font-size="11.5" fill="#5f6b7a" text-anchor="middle">local repository</text>
+  <text x="342" y="238" font-size="11.5" fill="#5f6b7a" text-anchor="middle">small, atomic commits</text>
+  <text x="342" y="256" font-size="11.5" fill="#5f6b7a" text-anchor="middle">.gitignore for target/</text>
+  <text x="342" y="282" font-size="11" fill="#8a6a12" text-anchor="middle">git add · git commit</text>
+
+  <text x="542" y="196" font-size="14.5" font-weight="700" fill="#1f2a44" text-anchor="middle">GitHub</text>
+  <text x="542" y="220" font-size="11.5" fill="#5f6b7a" text-anchor="middle">origin remote</text>
+  <text x="542" y="238" font-size="11.5" fill="#5f6b7a" text-anchor="middle">README + report</text>
+  <text x="542" y="256" font-size="11.5" fill="#5f6b7a" text-anchor="middle">issues · pull requests</text>
+  <text x="542" y="282" font-size="11" fill="#8a6a12" text-anchor="middle">git push origin main</text>
+
+  <text x="742" y="196" font-size="14.5" font-weight="700" fill="#1f2a44" text-anchor="middle">GitHub Actions</text>
+  <text x="742" y="220" font-size="11.5" fill="#5f6b7a" text-anchor="middle">.github/workflows</text>
+  <text x="742" y="238" font-size="11.5" fill="#5f6b7a" text-anchor="middle">JDK 17 · Maven cache</text>
+  <text x="742" y="256" font-size="11.5" fill="#5f6b7a" text-anchor="middle">on push / pull request</text>
+  <text x="742" y="282" font-size="11" fill="#8a6a12" text-anchor="middle">continuous integration</text>
+
+  <text x="942" y="196" font-size="14.5" font-weight="700" fill="#1f2a44" text-anchor="middle">Maven verify</text>
+  <text x="942" y="220" font-size="11.5" fill="#5f6b7a" text-anchor="middle">compile + test</text>
+  <text x="942" y="238" font-size="11.5" fill="#5f6b7a" text-anchor="middle">52 tests (JUnit 5)</text>
+  <text x="942" y="256" font-size="11.5" fill="#5f6b7a" text-anchor="middle">H2 in-memory test DB</text>
+  <text x="942" y="282" font-size="11" fill="#8a6a12" text-anchor="middle">./mvnw clean verify</text>
+
+  <text x="1142" y="196" font-size="14.5" font-weight="700" fill="#1f2a44" text-anchor="middle">Artifacts</text>
+  <text x="1142" y="220" font-size="11.5" fill="#5f6b7a" text-anchor="middle">two executable JARs</text>
+  <text x="1142" y="238" font-size="11.5" fill="#5f6b7a" text-anchor="middle">student-record-system</text>
+  <text x="1142" y="256" font-size="11.5" fill="#5f6b7a" text-anchor="middle">grading-service</text>
+  <text x="1142" y="282" font-size="11" fill="#8a6a12" text-anchor="middle">reproducible package</text>
+
+  <text x="1347" y="196" font-size="14.5" font-weight="700" fill="#e0bd52" text-anchor="middle">Docker Compose</text>
+  <text x="1347" y="220" font-size="11.5" fill="#d9e2f2" text-anchor="middle">port 8080 + 8081</text>
+  <text x="1347" y="238" font-size="11.5" fill="#d9e2f2" text-anchor="middle">one command startup</text>
+  <text x="1347" y="256" font-size="11.5" fill="#d9e2f2" text-anchor="middle">health checks</text>
+  <text x="1347" y="282" font-size="11" fill="#e0bd52" text-anchor="middle">docker compose up --build</text>
+
+  <!-- Arrows -->
+  <line x1="232" y1="235" x2="251" y2="235" stroke="#1f2a44" stroke-width="2.4" marker-end="url(#arrow)"/>
+  <line x1="432" y1="235" x2="451" y2="235" stroke="#1f2a44" stroke-width="2.4" marker-end="url(#arrow)"/>
+  <line x1="632" y1="235" x2="651" y2="235" stroke="#1f2a44" stroke-width="2.4" marker-end="url(#arrow)"/>
+  <line x1="832" y1="235" x2="851" y2="235" stroke="#1f2a44" stroke-width="2.4" marker-end="url(#arrow)"/>
+  <line x1="1032" y1="235" x2="1051" y2="235" stroke="#1f2a44" stroke-width="2.4" marker-end="url(#arrow)"/>
+  <line x1="1232" y1="235" x2="1251" y2="235" stroke="#1f2a44" stroke-width="2.4" marker-end="url(#arrow)"/>
+
+  <!-- Feedback loop -->
+  <path d="M1340 315 C1340 390 750 390 542 318" fill="none" stroke="#b58a1b" stroke-width="1.8" stroke-dasharray="6 5" marker-end="url(#arrow)"/>
+  <text x="920" y="404" font-size="11" fill="#8a6a12" text-anchor="middle">test failure → fix → commit again</text>
+
+  <!-- Summary strip -->
+  <rect x="55" y="415" width="1385" height="55" rx="9" fill="#ffffff" stroke="#d9d2c0"/>
+  <text x="75" y="439" font-size="12.5" font-weight="700" fill="#1f2a44">DevOps in one sentence</text>
+  <text x="75" y="458" font-size="11.5" fill="#5f6b7a">A repeatable build-and-test pipeline shortens feedback, keeps both services versioned together and makes a demo environment reproducible on any machine.</text>
+  <text x="1235" y="452" font-size="11" fill="#8a6a12">Docs: README · docs/REPORT.md</text>
+</svg>

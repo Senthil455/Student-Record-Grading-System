@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1000" viewBox="0 0 1500 1000" font-family="'DejaVu Sans', Arial, sans-serif">
+  <defs>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#1f2a44" flood-opacity="0.12"/>
+    </filter>
+    <linearGradient id="navy" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#1f2a44"/>
+      <stop offset="100%" stop-color="#33476f"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1500" height="1000" fill="#f7f4ec"/>
+  <text x="60" y="54" font-size="31" font-weight="700" fill="#1f2a44">Scholaris — Entity–Relationship Diagram</text>
+  <text x="60" y="82" font-size="15" fill="#5f6b7a">Physical schema produced by the JPA/Hibernate mapping (H2 or MySQL)</text>
+  <line x1="60" y1="96" x2="1440" y2="96" stroke="#d9d2c0" stroke-width="1.5"/>
+
+  <!-- PERSONS -->
+  <g filter="url(#shadow)">
+    <rect x="60" y="130" width="360" height="315" rx="10" fill="#ffffff" stroke="#1f2a44" stroke-width="1.5"/>
+  </g>
+  <path d="M60 140a10 10 0 0 1 10-10h340a10 10 0 0 1 10 10v42H60z" fill="url(#navy)"/>
+  <text x="78" y="158" font-size="15.5" font-weight="700" fill="#ffffff">persons</text>
+  <text x="78" y="175" font-size="10.5" fill="#c9d5ea">abstract root · JOINED inheritance</text>
+  <text x="78" y="200" font-size="12.5" font-family="'DejaVu Sans Mono', monospace" fill="#1f2a44">id</text>
+  <text x="300" y="200" font-size="10.5" fill="#b58a1b">BIGINT PK</text>
+  <text x="78" y="225" font-size="12.5" font-family="'DejaVu Sans Mono', monospace" fill="#1f2a44">first_name</text>
+  <text x="282" y="225" font-size="10.5" fill="#5f6b7a">VARCHAR(60) NN</text>
+  <text x="78" y="250" font-size="12.5" font-family="'DejaVu Sans Mono', monospace" fill="#1f2a44">last_name</text>
+  <text x="282" y="250" font-size="10.5" fill="#5f6b7a">VARCHAR(60) NN</text>
+  <text x="78" y="275" font-size="12.5" font-family="'DejaVu Sans Mono', monospace" fill="#1f2a44">email</text>
+  <text x="272" y="275" font-size="10.5" fill="#5f6b7a">VARCHAR(120) NN UQ</text>
+  <text x="78" y="300" font-size="12.5" font-family="'DejaVu Sans Mono', monospace" fill="#1f2a44">phone</text>
+  <text x="282" y="300" font-size="10.5" fill="#5f6b7a">VARCHAR(20)</text>
+  <text x="78" y="325" font-size="12.5" font-family="'DejaVu Sans Mono', monospace" fill="#1f2a44">date_of_birth</text>
+  <text x="282" y="325" font-size="10.5" fill="#5f6b7a">DATE</text>
+  <text x="78" y="350" font-size="12.5" font-family="'DejaVu Sans Mono', monospace" fill="#1f2a44">created_at</text>
+  <text x="272" y="350" font-size="10.5" fill="#5f6b7a">TIMESTAMP(6) NN</text>
+  <line x1="78" y1="365" x2="402" y2="365" stroke="#e6dfcf"/>
+  <text x="78" y="384" font-size="11" fill="#8a6a12">@Id · @GeneratedValue(IDENTITY)</text>
+  <text x="78" y="403" font-size="11" fill="#8a6a12">@Inheritance(strategy = JOINED)</text>
+  <text x="78" y="422" font-size="11" fill="#8a6a12">@PrePersist sets created_at</text>
+
+  <!-- STUDENTS -->
+  <g filter="url(#shadow)">
+    <rect x="60" y="545" width="360" height="250" rx="10" fill="#ffffff" stroke="#1f2a44" stroke-width="1.5"/>
+  </g>
+  <path d="M60 555a10 10 0 0 1 10-10h340a10 10 0 0 1 10 10v42H60z" fill="url(#navy)"/>
+  <text x="78" y="573" font-size="15.5" font-weight="700" fill="#ffffff">students</text>
+  <text x="78" y="590" font-size="10.5" fill="#c9d5ea">subclass table · PK is also FK to persons</text>
+  <text x="78" y="616" font-size="12.5" font-family="'DejaVu Sans Mono', monospace" fill="#1f2a44">person_id</text>
+  <text x="266" y="616" font-size="10.5" fill="#b58a1b">BIGINT PK FK</text>
+  <text x="78" y="641" font-size="12.5" font-family="'DejaVu Sans Mono', monospace" fill="#1f2a44">roll_number</text>
+  <text x="266" y="641" font-size="10.5" fill="#5f6b7a">VARCHAR(20) NN UQ</text>
+  <text x="78" y="666" font-size="12.5" font-family="'DejaVu Sans Mono', monospace" fill="#1f2a44">department</text>
+  <text x="266" y="666" font-size="10.5" fill="#5f6b7a">VARCHAR(80) NN</text>
+  <text x="78" y="691" font-size="12.5" font-family="'DejaVu Sans Mono', monospace" fill="#1f2a44">admission_year</text>
+  <text x="266" y="691" font-size="10.5" fill="#5f6b7a">INT NN</text>
+  <text x="78" y="716" font-size="12.5" font-family="'DejaVu Sans Mono', monospace" fill="#1f2a44">active</text>
+  <text x="266" y="716" font-size="10.5" fill="#5f6b7a">BOOLEAN NN</text>
+  <line x1="78" y1="731" x2="402" y2="731" stroke="#e6dfcf"/>
+  <text x="78" y="750" font-size="11" fill="#8a6a12">@PrimaryKeyJoinColumn(name = "person_id")</text>
+  <text x="78" y="769" font-size="11" fill="#8a6a12">@OneToMany(mappedBy = "student")</text>
+  <text x="78" y="788" font-size="11" fill="#8a6a12">cascade = ALL · orphanRemoval = true</text>
+
+  <!-- INSTRUCTORS -->
+  <g filter="url(#shadow)">
+    <rect x="545" y="130" width="355" height="250" rx="10" fill="#ffffff" stroke="#1f2a44" stroke-width="1.5"/>
+  </g>
+  <path d="M545 140a10 10 0 0 1 10-10h335a10 10 0 0 1 10 10v42H545z" fill="url(#navy)"/>
+  <text x="563" y="158" font-size="15.5" font-weight="700" fill="#ffffff">instructors</text>
+  <text x="563" y="175" font-size="10.5" fill="#c9d5ea">subclass table · PK is also FK to persons</text>
+  <text x="563" y="201" font-size="12.5" font-family="'DejaVu Sans Mono', monospace" fill="#1f2a44">person_id</text>
+  <text x="751" y="201" font-size="10.5" fill="#b58a1b">BIGINT PK FK</text>
+  <text x="563" y="226" font-size="12.5" font-family="'DejaVu Sans Mono', monospace" fill="#1f2a44">employee_code</text>
+  <text x="751" y="226" font-size="10.5" fill="#5f6b7a">VARCHAR(20) NN UQ</text>
+  <text x="563" y="251" font-size="12.5" font-family="'DejaVu Sans Mono', monospace" fill="#1f2a44">designation</text>
+  <text x="751" y="251" font-size="10.5" fill="#5f6b7a">VARCHAR(80)</text>
+  <text x="563" y="276" font-size="12.5" font-family="'DejaVu Sans Mono', monospace" fill="#1f2a44">specialization</text>
+  <text x="751" y="276" font-size="10.5" fill="#5f6b7a">VARCHAR(120)</text>
+  <line x1="563" y1="291" x2="882" y2="291" stroke="#e6dfcf"/>
+  <text x="563" y="310" font-size="11" fill="#8a6a12">A Person may be an Instructor.</text>
+  <text x="563" y="329" font-size="11" fill="#8a6a12">One instructor teaches many courses.</text>
+  <text x="563" y="348" font-size="11" fill="#8a6a12">@OneToMany(mappedBy = "instructor")</text>
+
+  <!-- COURSES -->
+  <g filter="url(#shadow)">
+    <rect x="1010" y="130" width="420" height="335" rx="10" fill="#ffffff" stroke="#1f2a44" stroke-width="1.5"/>
+  </g>
+  <path d="M1010 140a10 10 0 0 1 10-10h400a10 10 0 0 1 10 10v42H1010z" fill="url(#navy)"/>
+  <text x="1028" y="158" font-size="15.5" font-weight="700" fill="#ffffff">courses</text>
+  <text x="1028" y="175" font-size="10.5" fill="#c9d5ea">course catalogue</text>
+  <text x="1028" y="200" font-size="12.5" font-family="'DejaVu Sans Mono', monospace" fill="#1f2a44">id</text>
+  <text x="1330" y="200" font-size="10.5" fill="#b58a1b">BIGINT PK</text>
+  <text x="1028" y="225" font-size="12.5" font-family="'DejaVu Sans Mono', monospace" fill="#1f2a44">course_code</text>
+  <text x="1310" y="225" font-size="10.5" fill="#5f6b7a">VARCHAR(15) NN UQ</text>
+  <text x="1028" y="250" font-size="12.5" font-family="'DejaVu Sans Mono', monospace" fill="#1f2a44">title</text>
+  <text x="1310" y="250" font-size="10.5" fill="#5f6b7a">VARCHAR(120) NN</text>
+  <text x="1028" y="275" font-size="12.5" font-family="'DejaVu Sans Mono', monospace" fill="#1f2a44">credits</text>
+  <text x="1310" y="275" font-size="10.5" fill="#5f6b7a">INT NN</text>
+  <text x="1028" y="300" font-size="12.5" font-family="'DejaVu Sans Mono', monospace" fill="#1f2a44">semester</text>
+  <text x="1310" y="300" font-size="10.5" fill="#5f6b7a">INT NN</text>
+  <text x="1028" y="325" font-size="12.5" font-family="'DejaVu Sans Mono', monospace" fill="#1f2a44">department</text>
+  <text x="1310" y="325" font-size="10.5" fill="#5f6b7a">VARCHAR(80)</text>
+  <text x="1028" y="350" font-size="12.5" font-family="'DejaVu Sans Mono', monospace" fill="#1f2a44">description</text>
+  <text x="1310" y="350" font-size="10.5" fill="#5f6b7a">VARCHAR(500)</text>
+  <text x="1028" y="375" font-size="12.5" font-family="'DejaVu Sans Mono', monospace" fill="#1f2a44">instructor_id</text>
+  <text x="1310" y="375" font-size="10.5" fill="#b58a1b">BIGINT FK</text>
+  <line x1="1028" y1="390" x2="1412" y2="390" stroke="#e6dfcf"/>
+  <text x="1028" y="409" font-size="11" fill="#8a6a12">@ManyToOne(fetch = LAZY) → instructors</text>
+  <text x="1028" y="428" font-size="11" fill="#8a6a12">@OneToMany(mappedBy = "course") → enrollments</text>
+  <text x="1028" y="447" font-size="11" fill="#8a6a12">@UniqueConstraint on course_code</text>
+
+  <!-- ENROLLMENTS -->
+  <g filter="url(#shadow)">
+    <rect x="1010" y="545" width="420" height="385" rx="10" fill="#ffffff" stroke="#1f2a44" stroke-width="1.5"/>
+  </g>
+  <path d="M1010 555a10 10 0 0 1 10-10h400a10 10 0 0 1 10 10v42H1010z" fill="#b58a1b"/>
+  <text x="1028" y="573" font-size="15.5" font-weight="700" fill="#ffffff">enrollments</text>
+  <text x="1028" y="590" font-size="10.5" fill="#fff4cf">associative entity · resolves Student ↔ Course</text>
+  <text x="1028" y="616" font-size="12.5" font-family="'DejaVu Sans Mono', monospace" fill="#1f2a44">id</text>
+  <text x="1330" y="616" font-size="10.5" fill="#b58a1b">BIGINT PK</text>
+  <text x="1028" y="641" font-size="12.5" font-family="'DejaVu Sans Mono', monospace" fill="#1f2a44">student_id</text>
+  <text x="1310" y="641" font-size="10.5" fill="#b58a1b">BIGINT FK NN</text>
+  <text x="1028" y="666" font-size="12.5" font-family="'DejaVu Sans Mono', monospace" fill="#1f2a44">course_id</text>
+  <text x="1310" y="666" font-size="10.5" fill="#b58a1b">BIGINT FK NN</text>
+  <text x="1028" y="691" font-size="12.5" font-family="'DejaVu Sans Mono', monospace" fill="#1f2a44">marks</text>
+  <text x="1310" y="691" font-size="10.5" fill="#5f6b7a">DOUBLE</text>
+  <text x="1028" y="716" font-size="12.5" font-family="'DejaVu Sans Mono', monospace" fill="#1f2a44">grade</text>
+  <text x="1310" y="716" font-size="10.5" fill="#5f6b7a">VARCHAR(3)</text>
+  <text x="1028" y="741" font-size="12.5" font-family="'DejaVu Sans Mono', monospace" fill="#1f2a44">grade_point</text>
+  <text x="1310" y="741" font-size="10.5" fill="#5f6b7a">DOUBLE</text>
+  <text x="1028" y="766" font-size="12.5" font-family="'DejaVu Sans Mono', monospace" fill="#1f2a44">semester</text>
+  <text x="1310" y="766" font-size="10.5" fill="#5f6b7a">INT NN</text>
+  <text x="1028" y="791" font-size="12.5" font-family="'DejaVu Sans Mono', monospace" fill="#1f2a44">enrolled_on</text>
+  <text x="1310" y="791" font-size="10.5" fill="#5f6b7a">DATE NN</text>
+  <text x="1028" y="816" font-size="12.5" font-family="'DejaVu Sans Mono', monospace" fill="#1f2a44">graded_by</text>
+  <text x="1310" y="816" font-size="10.5" fill="#5f6b7a">VARCHAR(30)</text>
+  <line x1="1028" y1="831" x2="1412" y2="831" stroke="#efe2b8"/>
+  <text x="1028" y="850" font-size="11" fill="#8a6a12">UNIQUE (student_id, course_id)</text>
+  <text x="1028" y="869" font-size="11" fill="#8a6a12">ON DELETE CASCADE for both FKs</text>
+  <text x="1028" y="888" font-size="11" fill="#8a6a12">One student cannot enroll twice in a course</text>
+
+  <!-- Relationships -->
+  <!-- persons -> students (1 to 0..1) -->
+  <line x1="240" y1="445" x2="240" y2="545" stroke="#1f2a44" stroke-width="2"/>
+  <line x1="228" y1="462" x2="252" y2="462" stroke="#1f2a44" stroke-width="2"/>
+  <line x1="240" y1="527" x2="228" y2="545" stroke="#1f2a44" stroke-width="2"/>
+  <line x1="240" y1="527" x2="240" y2="545" stroke="#1f2a44" stroke-width="2"/>
+  <line x1="240" y1="527" x2="252" y2="545" stroke="#1f2a44" stroke-width="2"/>
+  <rect x="250" y="478" width="27" height="20" rx="4" fill="#f7f4ec"/>
+  <text x="256" y="493" font-size="12" font-weight="700" fill="#1f2a44">1</text>
+  <rect x="249" y="504" width="42" height="20" rx="4" fill="#f7f4ec"/>
+  <text x="254" y="519" font-size="11" font-weight="700" fill="#1f2a44">0..1</text>
+
+  <!-- persons -> instructors (1 to 0..1) -->
+  <line x1="420" y1="250" x2="545" y2="250" stroke="#1f2a44" stroke-width="2"/>
+  <line x1="437" y1="238" x2="437" y2="262" stroke="#1f2a44" stroke-width="2"/>
+  <line x1="527" y1="250" x2="545" y2="238" stroke="#1f2a44" stroke-width="2"/>
+  <line x1="527" y1="250" x2="545" y2="250" stroke="#1f2a44" stroke-width="2"/>
+  <line x1="527" y1="250" x2="545" y2="262" stroke="#1f2a44" stroke-width="2"/>
+  <rect x="462" y="225" width="27" height="20" rx="4" fill="#f7f4ec"/>
+  <text x="468" y="240" font-size="12" font-weight="700" fill="#1f2a44">1</text>
+  <rect x="493" y="266" width="42" height="20" rx="4" fill="#f7f4ec"/>
+  <text x="498" y="281" font-size="11" font-weight="700" fill="#1f2a44">0..1</text>
+
+  <!-- instructors -> courses (1 to 0..*) -->
+  <line x1="900" y1="270" x2="1010" y2="270" stroke="#1f2a44" stroke-width="2"/>
+  <line x1="917" y1="258" x2="917" y2="282" stroke="#1f2a44" stroke-width="2"/>
+  <line x1="992" y1="270" x2="1010" y2="258" stroke="#1f2a44" stroke-width="2"/>
+  <line x1="992" y1="270" x2="1010" y2="270" stroke="#1f2a44" stroke-width="2"/>
+  <line x1="992" y1="270" x2="1010" y2="282" stroke="#1f2a44" stroke-width="2"/>
+  <text x="929" y="260" font-size="12" font-weight="700" fill="#1f2a44">1</text>
+  <text x="956" y="294" font-size="11" font-weight="700" fill="#1f2a44">0..*</text>
+  <text x="916" y="244" font-size="10.5" fill="#5f6b7a">teaches</text>
+
+  <!-- courses -> enrollments (1 to 0..*) -->
+  <line x1="1220" y1="465" x2="1220" y2="545" stroke="#1f2a44" stroke-width="2"/>
+  <line x1="1208" y1="482" x2="1232" y2="482" stroke="#1f2a44" stroke-width="2"/>
+  <line x1="1220" y1="527" x2="1208" y2="545" stroke="#1f2a44" stroke-width="2"/>
+  <line x1="1220" y1="527" x2="1220" y2="545" stroke="#1f2a44" stroke-width="2"/>
+  <line x1="1220" y1="527" x2="1232" y2="545" stroke="#1f2a44" stroke-width="2"/>
+  <text x="1232" y="498" font-size="12" font-weight="700" fill="#1f2a44">1</text>
+  <text x="1232" y="522" font-size="11" font-weight="700" fill="#1f2a44">0..*</text>
+
+  <!-- students -> enrollments (1 to 0..*) -->
+  <line x1="420" y1="690" x2="1010" y2="690" stroke="#1f2a44" stroke-width="2"/>
+  <line x1="437" y1="678" x2="437" y2="702" stroke="#1f2a44" stroke-width="2"/>
+  <line x1="992" y1="690" x2="1010" y2="678" stroke="#1f2a44" stroke-width="2"/>
+  <line x1="992" y1="690" x2="1010" y2="690" stroke="#1f2a44" stroke-width="2"/>
+  <line x1="992" y1="690" x2="1010" y2="702" stroke="#1f2a44" stroke-width="2"/>
+  <text x="462" y="680" font-size="12" font-weight="700" fill="#1f2a44">1</text>
+  <text x="950" y="712" font-size="11" font-weight="700" fill="#1f2a44">0..*</text>
+  <rect x="650" y="672" width="118" height="24" rx="5" fill="#f7f4ec"/>
+  <text x="662" y="689" font-size="11" fill="#5f6b7a">enrolled in / awarded</text>
+
+  <!-- Legend / notes -->
+  <g>
+    <rect x="60" y="842" width="420" height="118" rx="10" fill="#ffffff" stroke="#d9d2c0"/>
+    <text x="78" y="867" font-size="13" font-weight="700" fill="#1f2a44">Key design decisions</text>
+    <text x="78" y="889" font-size="11.5" fill="#5f6b7a">• JOINED inheritance keeps shared person columns in one table.</text>
+    <text x="78" y="908" font-size="11.5" fill="#5f6b7a">• M:N Student–Course is modelled explicitly with Enrollment.</text>
+    <text x="78" y="927" font-size="11.5" fill="#5f6b7a">• Enrollment stores marks, grade, grade_point and provenance.</text>
+    <text x="78" y="946" font-size="11.5" fill="#5f6b7a">• Every surrogate key uses database identity generation.</text>
+  </g>
+  <g>
+    <rect x="510" y="842" width="470" height="118" rx="10" fill="#ffffff" stroke="#d9d2c0"/>
+    <text x="528" y="867" font-size="13" font-weight="700" fill="#1f2a44">Relationship cardinality</text>
+    <text x="528" y="889" font-size="11.5" fill="#5f6b7a">Person 1 —— 0..1 Student      Person 1 —— 0..1 Instructor</text>
+    <text x="528" y="908" font-size="11.5" fill="#5f6b7a">Instructor 1 —— 0..* Course   Course 1 —— 0..* Enrollment</text>
+    <text x="528" y="927" font-size="11.5" fill="#5f6b7a">Student 1 —— 0..* Enrollment</text>
+    <text x="528" y="946" font-size="11.5" fill="#8a6a12">The pair (student_id, course_id) is unique.</text>
+  </g>
+  <g>
+    <rect x="1010" y="950" width="420" height="10" rx="5" fill="#b58a1b" opacity="0.35"/>
+  </g>
+  <text x="1010" y="980" font-size="11" fill="#8a6a12" text-anchor="start">Generated for the IT23502 Web Programming mini-project report.</text>
+</svg>
