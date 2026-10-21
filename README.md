@@ -4,7 +4,7 @@ A complete Spring Boot mini-project for **IT23502 Web Programming (Units IV & V)
 
 > **Repository:** <https://github.com/Senthil455/Student-Record-Grading-System>
 >
-> **Report:** [`docs/REPORT.pdf`](docs/REPORT.pdf) · **API guide:** [`docs/API.md`](docs/API.md) · **Viva notes:** [`docs/VIVA_NOTES.md`](docs/VIVA_NOTES.md)
+> **Report:** [`docs/REPORT.pdf`](docs/REPORT.pdf) · **Slides:** [`docs/Scholaris-Presentation.pptx`](docs/Scholaris-Presentation.pptx) · **API guide:** [`docs/API.md`](docs/API.md) · **Viva notes:** [`docs/VIVA_NOTES.md`](docs/VIVA_NOTES.md)
 
 ![Dashboard](docs/screenshots/dashboard.png)
 
